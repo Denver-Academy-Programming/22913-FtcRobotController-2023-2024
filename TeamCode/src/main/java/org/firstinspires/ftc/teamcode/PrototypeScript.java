@@ -5,21 +5,26 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp
+@TeleOp(name = "Prototype V1 Robot Script", group = "Prototype Scripts")
 public class PrototypeScript extends LinearOpMode {
 
     // Define Variable
+    // Time the script has been running for.
+    ElapsedTime runtime = new ElapsedTime();
+
     // Motors
-    DcMotor motorFront;
-    DcMotor motorBack;
-    DcMotor motorLeft;
-    DcMotor motorRight;
+    DcMotor motorFront = null;
+    DcMotor motorBack = null;
+    DcMotor motorLeft = null;
+    DcMotor motorRight = null;
 
     // Servo
-    Servo armServo;
-    // Boolean to check if the arm is already open or not
-    boolean armServoOpen;
+    Servo armServo = null;
+    
+    // Boolean to check if the arm is already open or not.
+    boolean armServoOpen = true;
 
     // Power for motors bound to the controller left and right sticks.
     // leftRightPower is for the front and back motors for moving left and right.
@@ -66,6 +71,7 @@ public class PrototypeScript extends LinearOpMode {
 
         while (opModeIsActive()) {
             // Display on the Driver Hub info about our robot while its running
+            telemetry.addData("Run Time:", runtime.toString());
             telemetry.addData("Status:", "Script is running!");
             telemetry.addData("leftRightPower:", leftRightPower);
             telemetry.addData("forwardBackPower:", forwardBackPower);

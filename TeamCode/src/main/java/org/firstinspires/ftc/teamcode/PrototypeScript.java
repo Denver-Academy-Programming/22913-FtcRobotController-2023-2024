@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @TeleOp(name = "Prototype V1 Robot Script", group = "Prototype Scripts")
 public class PrototypeScript extends LinearOpMode {
 
-    // Define Variable
+    // Define Variables
     // Time the script has been running for.
     ElapsedTime runtime = new ElapsedTime();
 
@@ -22,17 +22,17 @@ public class PrototypeScript extends LinearOpMode {
 
     // Servo
     Servo armServo = null;
-    
+
     // Boolean to check if the arm is already open or not.
     boolean armServoOpen = true;
 
-    // Power for motors bound to the controller left and right sticks.
-    // leftRightPower is for the front and back motors for moving left and right.
-    // forwardBackPower is for the left and right motors for moving forward and back.
-    double leftRightPower = gamepad1.left_stick_y;
-    double forwardBackPower = gamepad1.right_stick_y;
-
     public void runOpMode() {
+        // Power for motors bound to the controller left and right sticks.
+        // leftRightPower is for the front and back motors for moving left and right.
+        // forwardBackPower is for the left and right motors for moving forward and back.
+        double leftRightPower = gamepad1.left_stick_y;
+        double forwardBackPower = gamepad1.right_stick_y;
+
         // Initialize and setup the modules connected to the Control Hub.
         // Also deliberately sets the right motor in reverse because its
         // physically placed in a reverse position to the left motor.
@@ -40,10 +40,10 @@ public class PrototypeScript extends LinearOpMode {
             // All four motors, front, back, left, and right.
             // Grab them all from the hardwareMap and set their
             // direction so driving works as intended.
-            motorFront = hardwareMap.get(DcMotor.class, "motorNorth");
-            motorBack = hardwareMap.get(DcMotor.class, "motorSouth");
-            motorLeft = hardwareMap.get(DcMotor.class, "motorEast");
-            motorRight = hardwareMap.get(DcMotor.class, "motorWest");
+            motorFront = hardwareMap.get(DcMotor.class, "motorFront");
+            motorBack = hardwareMap.get(DcMotor.class, "motorBack");
+            motorLeft = hardwareMap.get(DcMotor.class, "motorLeft");
+            motorRight = hardwareMap.get(DcMotor.class, "motorRight");
             motorFront.setDirection(DcMotorSimple.Direction.FORWARD);
             motorBack.setDirection(DcMotorSimple.Direction.REVERSE);
             motorLeft.setDirection(DcMotorSimple.Direction.FORWARD);

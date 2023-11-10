@@ -7,8 +7,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name = "Prototype V1 Robot Script", group = "Prototype Scripts")
-public class PrototypeScript extends LinearOpMode {
+@TeleOp(name = "Prototype V1 Robot Script Arm Servo and Drive", group = "Prototype Scripts")
+public class PrototypeScriptV1ArmServoDrive extends LinearOpMode {
 
     // Define Variables
     // Time the script has been running for.
@@ -26,6 +26,7 @@ public class PrototypeScript extends LinearOpMode {
     // Boolean to check if the arm is already open or not.
     boolean armServoOpen = true;
 
+    @Override
     public void runOpMode() {
         // Power for motors bound to the controller left and right sticks.
         // leftRightPower is for the front and back motors for moving left and right.

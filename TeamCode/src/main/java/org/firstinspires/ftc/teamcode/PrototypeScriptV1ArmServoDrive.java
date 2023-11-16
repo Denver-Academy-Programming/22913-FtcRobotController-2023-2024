@@ -33,6 +33,10 @@ public class PrototypeScriptV1ArmServoDrive extends LinearOpMode {
         // forwardBackPower is for the left and right motors for moving forward and back.
         double leftRightPower;
         double forwardBackPower;
+        boolean DpadRight;
+        boolean DpadLeft;
+        boolean DpadUp;
+        boolean DpadDown;
 
         // Initialize and setup the modules connected to the Control Hub.
         // Also deliberately sets the right motor  in reverse because its
@@ -73,6 +77,10 @@ public class PrototypeScriptV1ArmServoDrive extends LinearOpMode {
             // Controller inputs
             leftRightPower = gamepad1.left_stick_x;
             forwardBackPower = gamepad1.right_stick_y;
+            DpadRight = gamepad1.dpad_right;
+            DpadLeft = gamepad1.dpad_left;
+            DpadUp = gamepad1.dpad_up;
+            DpadDown = gamepad1.dpad_down;
 
             // Display on the Driver Hub info about our robot while its running
             telemetry.addData("Servo:", armServo.getPosition());
@@ -81,7 +89,10 @@ public class PrototypeScriptV1ArmServoDrive extends LinearOpMode {
             telemetry.addData("leftRightPower:", leftRightPower);
             telemetry.addData("forwardBackPower:", forwardBackPower);
             telemetry.addData("Arm Open:", armServoOpen);
-            telemetry.update();
+            telemetry.addData("RightPower:", DpadRight);
+            telemetry.addData("LeftPower:", DpadLeft);
+            telemetry.addData("ForwardPower:", DpadUp);
+            telemetry.addData("BackPower:", DpadDown);
 
             // Set the motors power to what the direction of which stick is being pressed.
             motorFront.setPower(leftRightPower);
@@ -89,6 +100,19 @@ public class PrototypeScriptV1ArmServoDrive extends LinearOpMode {
             motorLeft.setPower(forwardBackPower);
             motorRight.setPower(forwardBackPower);
 
+
+            if (gamepad1.dpad_left) {
+                motorLeft.setPower(1);
+            }
+            if (gamepad1.dpad_right) {
+                motorRight.setPower(1);
+            }
+            if (gamepad1.dpad_down) {
+                motorBack.setPower(1);
+            }
+            if(gamepad1.dpad_up) {
+                motorFront.setPower(1);
+            }
             // Pressing X will open the servo arm.
             if (gamepad1.x && !armServoOpen) {
                 armServo.setPosition(0.0);

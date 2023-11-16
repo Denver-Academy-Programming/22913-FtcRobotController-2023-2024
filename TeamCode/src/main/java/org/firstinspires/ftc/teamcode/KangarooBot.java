@@ -18,6 +18,7 @@ public class KangarooBot extends LinearOpMode {
         double motorLeftPower;
         double motorRightPower;
 
+
         // Setup variables for power control
         // 1 - Fast
         // 2 - Medium Speed

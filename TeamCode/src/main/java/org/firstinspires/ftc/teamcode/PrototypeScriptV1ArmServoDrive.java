@@ -29,7 +29,7 @@ public class PrototypeScriptV1ArmServoDrive extends LinearOpMode {
     // turnPower is the the power used when turning.
     float leftRightPower;
     float forwardBackPower;
-    float turnPower = 0.25F;
+    float turnPower = 0.5F;
 
     @Override
     public void runOpMode() {
@@ -63,8 +63,8 @@ public class PrototypeScriptV1ArmServoDrive extends LinearOpMode {
                 "Full traceback:\n" + e
             );
         }
-        telemetry.addData("Status:", "Modules initialized!");
-        telemetry.addData("User Action:", "Waiting for user to start script...");
+        telemetry.addData("Status", "Modules initialized!");
+        telemetry.addData("User Action", "Waiting for user to start script...");
         telemetry.update();
         waitForStart();
 
@@ -83,34 +83,35 @@ public class PrototypeScriptV1ArmServoDrive extends LinearOpMode {
             telemetry.addData("Left Motor Running", gamepad1.dpad_left);
             telemetry.addData("Forward Motor Running", gamepad1.dpad_up);
             telemetry.addData("Back Motor Running", gamepad1.dpad_down);
+            telemetry.update();
 
             // Set the motors power to what the direction of which stick is being pressed.
-            motorFront.setPower(leftRightPower / 2);
-            motorBack.setPower(leftRightPower / 2);
-            motorLeft.setPower(forwardBackPower / -2);
-            motorRight.setPower(forwardBackPower / -2);
+            motorFront.setPower(leftRightPower * 0.75);
+            motorBack.setPower(leftRightPower * 0.75);
+            motorLeft.setPower(forwardBackPower * -0.75);
+            motorRight.setPower(forwardBackPower * -0.75);
 
             // Checking if the bumper buttons are pressed to turn the robot.
             if (gamepad1.left_bumper) {
-                motorFront.setPower(turnPower);
+                motorFront.setPower(-turnPower);
                 motorBack.setPower(turnPower);
-                motorLeft.setPower(turnPower);
+                motorLeft.setPower(-turnPower);
                 motorRight.setPower(turnPower);
             }
             if (gamepad1.right_bumper) {
-                motorFront.setPower(-turnPower);
+                motorFront.setPower(turnPower);
                 motorBack.setPower(-turnPower);
-                motorLeft.setPower(-turnPower);
+                motorLeft.setPower(turnPower);
                 motorRight.setPower(-turnPower);
             }
 
             // Pressing X will open the servo arm.
-            if (gamepad1.x && !(armServo.getPosition() == 0.5)) {
+            if (gamepad1.x) {
                 armServo.setPosition(0.0);
             }
 
             // Pressing Y will close the servo arm.
-            if (gamepad1.y && !(armServo.getPosition() == 0.0)) {
+            if (gamepad1.y) {
                 armServo.setPosition(0.5);
             }
 

@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.Gyroscope;
 import com.qualcomm.robotcore.hardware.Servo;
 
 // Here we are telling the driver hub this is tele-operated (i.e., driver controlled) operation mode
-@TeleOp(name="Paper Plane Launcher", group = "Prototype Scripts")
+@TeleOp(name="Paper Plane Launcher", group = "Prototype V1 Scripts")
 public class Launcher extends LinearOpMode {
     @Override
     public void runOpMode() {

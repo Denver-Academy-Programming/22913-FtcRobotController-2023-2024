@@ -16,7 +16,7 @@ import org.opencv.core.Mat;
 
 import java.util.ArrayList;
 
-@TeleOp(name = "Prototype Script AprilTag Vision", group = "Prototype Scripts")
+@TeleOp(name = "Prototype Script AprilTag Vision", group = "Prototype V1 Scripts")
 public class PrototypeScriptAprilTagVision extends LinearOpMode {
 
     // Variables

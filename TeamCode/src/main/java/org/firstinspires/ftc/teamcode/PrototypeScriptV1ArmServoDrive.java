@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name = "Prototype V1 Robot Script Arm Servo and Drive", group = "Prototype V1 Scripts")
+@TeleOp(name = "Prototype V1 Robot Script", group = "Prototype V1 Scripts")
 public class PrototypeScriptV1ArmServoDrive extends LinearOpMode {
 
     // Define Variables
@@ -19,9 +19,6 @@ public class PrototypeScriptV1ArmServoDrive extends LinearOpMode {
     DcMotor motorBack = null;
     DcMotor motorLeft = null;
     DcMotor motorRight = null;
-
-    // Servo
-    Servo armServo = null;
 
     // Power for motors bound to the controller left and right sticks.
     // leftRightPower is for the front and back motors for moving left and right.
@@ -48,13 +45,6 @@ public class PrototypeScriptV1ArmServoDrive extends LinearOpMode {
             motorBack.setDirection(DcMotorSimple.Direction.FORWARD);
             motorLeft.setDirection(DcMotorSimple.Direction.REVERSE);
             motorRight.setDirection(DcMotorSimple.Direction.FORWARD);
-
-            // Servo for the arm.
-            // Grab it from the hardwareMap and set its range and direction.
-            // Also set it to a initial open position.
-            armServo = hardwareMap.get(Servo.class, "armServo");
-            armServo.scaleRange(0.0, 0.5);
-            armServo.setPosition(0.0);
         } catch (IllegalArgumentException e) {
             throw new RuntimeException(
                 "An error occurred with the initialization of the script!\n" +
@@ -76,7 +66,6 @@ public class PrototypeScriptV1ArmServoDrive extends LinearOpMode {
             // Display on the Driver Hub info about our robot while its running
             telemetry.addData("Status", "Script is running!");
             telemetry.addData("Run Time", runtime.toString());
-            telemetry.addData("Servo", armServo.getPosition());
             telemetry.addData("leftRightPower", leftRightPower);
             telemetry.addData("forwardBackPower", forwardBackPower);
             telemetry.addData("Right Motor Running", gamepad1.dpad_right);
@@ -103,16 +92,6 @@ public class PrototypeScriptV1ArmServoDrive extends LinearOpMode {
                 motorBack.setPower(-turnPower);
                 motorLeft.setPower(turnPower);
                 motorRight.setPower(-turnPower);
-            }
-
-            // Pressing X will open the servo arm.
-            if (gamepad1.x) {
-                armServo.setPosition(0.0);
-            }
-
-            // Pressing Y will close the servo arm.
-            if (gamepad1.y) {
-                armServo.setPosition(0.5);
             }
 
             // Pressing B on the controller will stop the TeleOP script.

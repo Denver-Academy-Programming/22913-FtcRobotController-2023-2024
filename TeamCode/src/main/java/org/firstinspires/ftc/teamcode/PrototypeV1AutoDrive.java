@@ -15,8 +15,8 @@ public class PrototypeV1AutoDrive extends LinearOpMode {
     private DcMotor motorRight = null;
     private ElapsedTime runtime = new ElapsedTime();
 
-    float rightLeftPower;
-    float forwardBackPower;
+    float rightLeftPower = 0.5f;
+    float forwardBackPower = 0.5f;
     float turningPower = 0.6f;
 
     //Need to add a wait for start variable!!!
@@ -69,6 +69,7 @@ public class PrototypeV1AutoDrive extends LinearOpMode {
         while (opModeIsActive() && (runtime.seconds() < 3.0)) {
             telemetry.addData("Move 1 Time", runtime.seconds());
         }
+        
 
     }
 }

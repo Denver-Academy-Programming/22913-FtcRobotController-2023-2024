@@ -17,7 +17,7 @@ public class PrototypeV1AutoDrive extends LinearOpMode {
 
     float rightLeftPower = 0.5f;
     float forwardBackPower = 0.5f;
-    float turningPower = 0.6f;
+    float turningPower = 0.5f;
 
     //Need to add a wait for start variable!!!
     //
@@ -62,14 +62,37 @@ public class PrototypeV1AutoDrive extends LinearOpMode {
         waitForStart();
 
         //Step 1: Drive forward for 2 seconds
-        motorLeft.setPower(forwardBackPower);
-        motorRight.setPower(forwardBackPower);
+        //motorLeft.setPower(forwardBackPower);
+        //motorRight.setPower(forwardBackPower);
         //Resetting the runtime because it begins right away after initalization.
-        runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 3.0)) {
-            telemetry.addData("Move 1 Time", runtime.seconds());
-        }
-        
+        //while (opModeIsActive() && (runtime.seconds() < 1.0)) {
+            //telemetry.addData("Move 1 Time", runtime.seconds());
 
+        //}
+        moveForward(1f);
+        turnRight(1f);
+        moveForward(1.5f);
+    }
+    private void turnRight(float time){
+        runtime.reset();
+        telemetry.addData("Turning Right Time", time);
+        telemetry.update();
+
+        while (opModeIsActive() && (runtime.seconds() < time)){
+            motorFront.setPower(turningPower);
+            motorBack.setPower(-turningPower);
+            motorLeft.setPower(turningPower);
+            motorRight.setPower(-turningPower);
+        }
+    }
+    private void moveForward(float time){
+        runtime.reset();
+        telemetry.addData("Moving Forward Time", time);
+        telemetry.update();
+
+        while (opModeIsActive() && (runtime.seconds() < time)){
+            motorLeft.setPower(forwardBackPower);
+            motorRight.setPower(forwardBackPower);
+        }
     }
 }

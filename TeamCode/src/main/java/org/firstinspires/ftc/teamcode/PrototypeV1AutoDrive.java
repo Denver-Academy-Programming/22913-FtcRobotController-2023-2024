@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name = "Prototype V1 AutoDrive", group="PrototypeV1")
 public class PrototypeV1AutoDrive extends LinearOpMode {
-    /* Decalare OpMode members.*/
+    /* Declare OpMode members.*/
     private DcMotor motorFront = null;
     private DcMotor motorBack = null;
     private DcMotor motorLeft = null;
@@ -60,20 +60,12 @@ public class PrototypeV1AutoDrive extends LinearOpMode {
 
         //Waiting for program to begin and user to start the application.
         waitForStart();
-
-        //Step 1: Drive forward for 2 seconds
-        //motorLeft.setPower(forwardBackPower);
-        //motorRight.setPower(forwardBackPower);
-        //Resetting the runtime because it begins right away after initalization.
-        //while (opModeIsActive() && (runtime.seconds() < 1.0)) {
-            //telemetry.addData("Move 1 Time", runtime.seconds());
-
-        //}
-        moveForward(1f);
+        
+        moveForward(1);
         motorStop();
-        turnRight(0.5f);
+        turnRight(0.37F);
         motorStop();
-        moveForward(1.5f);
+        moveForward(1.5F);
         motorStop();
     }
     private void turnRight(float time){

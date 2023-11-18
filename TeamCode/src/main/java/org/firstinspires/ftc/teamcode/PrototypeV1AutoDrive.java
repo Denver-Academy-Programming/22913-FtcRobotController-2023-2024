@@ -70,8 +70,11 @@ public class PrototypeV1AutoDrive extends LinearOpMode {
 
         //}
         moveForward(1f);
-        turnRight(1f);
+        motorStop();
+        turnRight(0.5f);
+        motorStop();
         moveForward(1.5f);
+        motorStop();
     }
     private void turnRight(float time){
         runtime.reset();
@@ -94,5 +97,12 @@ public class PrototypeV1AutoDrive extends LinearOpMode {
             motorLeft.setPower(forwardBackPower);
             motorRight.setPower(forwardBackPower);
         }
+    }
+
+    private void motorStop(){
+        motorFront.setPower(0);
+        motorBack.setPower(0);
+        motorLeft.setPower(0);
+        motorRight.setPower(0);
     }
 }

@@ -6,23 +6,18 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name = "Prototype V1 AutoDrive", group="PrototypeV1")
-public class PrototypeV1AutoDrive extends LinearOpMode {
+@Autonomous(name = "Prototype V1 Auto Red Left", group="PrototypeV1")
+public class PrototypeV1AutoRedLeft extends LinearOpMode {
     /* Declare OpMode members.*/
     private DcMotor motorFront = null;
     private DcMotor motorBack = null;
     private DcMotor motorLeft = null;
     private DcMotor motorRight = null;
-    private ElapsedTime runtime = new ElapsedTime();
+    private final ElapsedTime runtime = new ElapsedTime();
 
     float rightLeftPower = 0.5f;
     float forwardBackPower = 0.5f;
     float turningPower = 0.5f;
-
-    //Need to add a wait for start variable!!!
-    //
-    //
-    //
 
     @Override
     public void runOpMode() {
@@ -60,14 +55,26 @@ public class PrototypeV1AutoDrive extends LinearOpMode {
 
         //Waiting for program to begin and user to start the application.
         waitForStart();
-        
+
         moveForward(1);
         motorStop();
-        turnRight(0.37F);
-        motorStop();
-        moveForward(1.5F);
+        turnLeft(0.36F);
         motorStop();
     }
+
+    private void turnLeft(float time){
+        runtime.reset();
+        telemetry.addData("Turning Right Time", time);
+        telemetry.update();
+
+        while (opModeIsActive() && (runtime.seconds() < time)){
+            motorFront.setPower(-turningPower);
+            motorBack.setPower(turningPower);
+            motorLeft.setPower(-turningPower);
+            motorRight.setPower(turningPower);
+        }
+    }
+
     private void turnRight(float time){
         runtime.reset();
         telemetry.addData("Turning Right Time", time);
@@ -80,6 +87,7 @@ public class PrototypeV1AutoDrive extends LinearOpMode {
             motorRight.setPower(-turningPower);
         }
     }
+
     private void moveForward(float time){
         runtime.reset();
         telemetry.addData("Moving Forward Time", time);

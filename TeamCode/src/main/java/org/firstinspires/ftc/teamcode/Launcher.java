@@ -2,6 +2,7 @@
 package org.firstinspires.ftc.teamcode;
 
 // Imports for stuff we use
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -12,6 +13,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 // Here we are telling the driver hub this is tele-operated (i.e., driver controlled) operation mode
 @TeleOp(name="Paper Plane Launcher", group = "Prototype V1 Scripts")
+@Disabled
 public class Launcher extends LinearOpMode {
     @Override
     public void runOpMode() {

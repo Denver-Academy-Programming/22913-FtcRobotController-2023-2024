@@ -4,11 +4,10 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name = "Prototype V1 Robot Script", group = "Prototype V1 Scripts")
-public class PrototypeScriptV1ArmServoDrive extends LinearOpMode {
+@TeleOp(name = "Prototype V1 Robot Script (THIS ONE DRIVERS!!!)", group = "Prototype V1 Scripts")
+public class PrototypeV1RobotDrive extends LinearOpMode {
 
     // Define Variables
     // Time the script has been running for.
@@ -68,10 +67,6 @@ public class PrototypeScriptV1ArmServoDrive extends LinearOpMode {
             telemetry.addData("Run Time", runtime.toString());
             telemetry.addData("leftRightPower", leftRightPower);
             telemetry.addData("forwardBackPower", forwardBackPower);
-            telemetry.addData("Right Motor Running", gamepad1.dpad_right);
-            telemetry.addData("Left Motor Running", gamepad1.dpad_left);
-            telemetry.addData("Forward Motor Running", gamepad1.dpad_up);
-            telemetry.addData("Back Motor Running", gamepad1.dpad_down);
             telemetry.update();
 
             // Set the motors power to what the direction of which stick is being pressed.

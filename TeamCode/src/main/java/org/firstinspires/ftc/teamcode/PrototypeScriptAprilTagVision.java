@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode;
 import android.graphics.Canvas;
 import android.util.Size;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -17,6 +18,7 @@ import org.opencv.core.Mat;
 import java.util.ArrayList;
 
 @TeleOp(name = "Prototype Script AprilTag Vision", group = "Prototype V1 Scripts")
+@Disabled
 public class PrototypeScriptAprilTagVision extends LinearOpMode {
 
     // Variables

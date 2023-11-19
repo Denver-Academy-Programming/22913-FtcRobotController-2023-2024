@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import java.util.Locale;
 
 @TeleOp
+@Disabled
 public class TelemetryCounter extends LinearOpMode {
     @Override
     public void runOpMode() {

@@ -58,9 +58,9 @@ public class PrototypeV1AutoRedRight extends LinearOpMode {
 
         moveForward(1);
         motorStop();
-        turnRight(0.36F);
+        turnRight(0.35F);
         motorStop();
-        moveForward(1);
+        moveForward(1.30F);
         motorStop();
     }
 
@@ -76,7 +76,7 @@ public class PrototypeV1AutoRedRight extends LinearOpMode {
             motorRight.setPower(turningPower);
         }
     }
-
+    // Time 0.35F = About 90 degree turn
     private void turnRight(float time){
         runtime.reset();
         telemetry.addData("Turning Right Time", time);

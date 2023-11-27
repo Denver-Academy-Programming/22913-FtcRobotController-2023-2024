@@ -1,5 +1,5 @@
 // This is part of the teamcode package that gets put onto our robot
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.prototypev1;
 
 // Imports for stuff we use
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;

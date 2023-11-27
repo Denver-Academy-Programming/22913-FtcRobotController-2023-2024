@@ -1,16 +1,13 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.prototypev1;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.library.BasicMoveOperations;
 import org.firstinspires.ftc.teamcode.library.HardwareConfig;
 
-@Autonomous(name = "Prototype V1 Auto Blue Left", group="PrototypeV1")
-public class PrototypeV1AutoBlueLeft extends LinearOpMode {
+@Autonomous(name = "Prototype V1 Auto Blue Right", group="PrototypeV1")
+public class PrototypeV1AutoBlueRight extends LinearOpMode {
     HardwareConfig hardware = new HardwareConfig(this);
 
     @Override
@@ -26,6 +23,6 @@ public class PrototypeV1AutoBlueLeft extends LinearOpMode {
 
         BasicMoveOperations.moveForward(0.5F);
         BasicMoveOperations.turnLeft(0.175F);
-        BasicMoveOperations.moveForward(0.65F);
+        BasicMoveOperations.moveForward(1.65F);
     }
 }

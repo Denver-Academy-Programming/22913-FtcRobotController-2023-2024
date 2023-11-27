@@ -8,11 +8,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
     robot movement functions that can be used in both
     Autonomous and TeleOp modes.
 
-    Time 0.35F at 0.5 Power = About 90 degree turn
-    Time 1 second at 0.5 Power = 1 square on field
+    Time 0.175F at 1.0 Power = About 90 degree turn
+    Time 0.5F second at 1 Power = 1 square on field
 */
 
-public class BasicMoveOperation {
+public class BasicMoveOperations {
     private static final ElapsedTime scriptRunTime = GVars.scriptRunTime;
 
     private static final LinearOpMode opMode = HardwareConfig.activeLinearOpMode;
@@ -20,7 +20,7 @@ public class BasicMoveOperation {
     /**
      * Make the robot rotate to the left.
      * <p>
-     * Setting time to 0.35F results in a about 90 degree turn.
+     * Setting time to 0.175F at 1.0 autoTurnPower results in a about 90 degree turn.
      * @param time Time to run operation as a float.
     */
     public static void turnLeft(float time) {
@@ -41,7 +41,7 @@ public class BasicMoveOperation {
     /**
      * Make the robot rotate to the right.
      * <p>
-     * Setting time to 0.35F results in a about 90 degree turn.
+     * Setting time to 0.175F at 1.0 autoTurnPower results in a about 90 degree turn.
      * @param time Time to run operation as a float.
     */
     public static void turnRight(float time) {
@@ -61,7 +61,7 @@ public class BasicMoveOperation {
     /**
      * Make the robot move forward.
      * <p>
-     * Setting time to 1.0F results in moving forward one game field square.
+     * Setting time to 0.5F at 1.0 autoMovePower results in moving forward one game field square.
      * @param time Time to run operation as a float.
     */
     public static void moveForward(float time) {
@@ -79,7 +79,7 @@ public class BasicMoveOperation {
     /**
      * Make the robot move backward.
      * <p>
-     * Setting time to 1.0F results in moving backward one game field square.
+     * Setting time to 0.5F at 1.0 autoMovePower results in moving backward one game field square.
      * @param time Time to run operation as a float.
     */
     public static void moveBackward(float time) {

@@ -18,7 +18,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Launcher extends LinearOpMode {
     @Override
     public void runOpMode() {
-        
+
         Servo ArmServo = hardwareMap.get(Servo.class, "ArmServo");
         ArmServo.scaleRange(0, 1.0);
         ArmServo.setPosition(0.0);

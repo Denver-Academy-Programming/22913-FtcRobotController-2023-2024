@@ -6,8 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.library.BasicMoveOperations;
 import org.firstinspires.ftc.teamcode.library.HardwareConfig;
 
-@Autonomous(name = "Prototype V1 Auto Blue Right", group="PrototypeV1")
-public class PrototypeV1AutoBlueRight extends LinearOpMode {
+@Autonomous(name = "Prototype V1 Auto Blue Right", group = "PrototypeV1")
+public class AutoBlueRight extends LinearOpMode {
     HardwareConfig hardware = new HardwareConfig(this);
 
     @Override

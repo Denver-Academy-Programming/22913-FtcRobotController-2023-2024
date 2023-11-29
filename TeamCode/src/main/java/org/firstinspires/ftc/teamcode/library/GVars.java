@@ -20,6 +20,6 @@ public class GVars {
     // Powers for turning and moving back and forth.
     public static float teleopTurnPower = 0.5F; // Speed used for turning while running in TeleOp.
     public static float teleopMovePower = 0.5F; // Speed used for moving while running in TeleOp.
-    public static float autoTurnPower = 1.0F; // Speed used for turning while running in Autonomous.
-    public static float autoMovePower = 1.0F; // Speed used for moving while running in Autonomous.
+    public static final float autoTurnPower = 1.0F; // Speed used for turning while running in Autonomous.
+    public static final float autoMovePower = 1.0F; // Speed used for moving while running in Autonomous.
 }

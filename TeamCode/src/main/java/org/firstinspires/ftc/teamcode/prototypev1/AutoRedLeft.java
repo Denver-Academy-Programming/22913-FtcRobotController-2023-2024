@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.library.BasicMoveOperations;
 import org.firstinspires.ftc.teamcode.library.HardwareConfig;
 
 @Autonomous(name = "Prototype V1 Auto Red Left", group="PrototypeV1")
-public class PrototypeV1AutoRedLeft extends LinearOpMode {
+public class AutoRedLeft extends LinearOpMode {
     HardwareConfig hardware = new HardwareConfig(this);
 
     @Override

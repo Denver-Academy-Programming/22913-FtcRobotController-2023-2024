@@ -21,10 +21,6 @@ import java.util.ArrayList;
 @Disabled
 public class PrototypeScriptAprilTagVision extends LinearOpMode {
 
-    // Variables
-    // AprilTag
-    private AprilTagProcessor aprilTag;
-
     // VisionPortal
     private VisionPortal visionPortal;
 
@@ -46,7 +42,7 @@ public class PrototypeScriptAprilTagVision extends LinearOpMode {
     private void intiAprilTag() {
 
         // Create the AprilTag processor.
-        aprilTag = new AprilTagProcessor.Builder()
+        AprilTagProcessor aprilTag = new AprilTagProcessor.Builder()
                 .setDrawCubeProjection(true)
                 .build();
 

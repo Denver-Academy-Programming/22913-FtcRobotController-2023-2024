@@ -84,6 +84,9 @@ public class HardwareConfig {
             servoPlaneLauncher = activeLinearOpMode.hardwareMap.get(Servo.class, "servoPlaneLauncher");
             servoPlaneLauncher.scaleRange(0.0, 0.5);
             servoPlaneLauncher.setPosition(0.0);
+                servoPlaneLauncher = currentOpMode.hardwareMap.get(Servo.class, "servoPlaneLauncher");
+                servoPlaneLauncher.scaleRange(0.4, 5.0);
+                servoPlaneLauncher.setPosition(5.0);
 
             // Webcam
             webcam = activeLinearOpMode.hardwareMap.get(WebcamName.class, "Webcam 1");

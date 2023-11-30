@@ -18,6 +18,8 @@ public class Launcher extends LinearOpMode {
 
         Servo ArmServo = HardwareConfig.servoPlaneLauncher;
 
+        boolean pressed = gamepad2.x;
+
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
@@ -25,11 +27,12 @@ public class Launcher extends LinearOpMode {
 
         while (opModeIsActive()) {
             telemetry.addData("Status", "Running");
+            telemetry.addData("press", pressed);
             telemetry.update();
-            ArmServo.setPosition(0.0);
 
-            if (gamepad1.x) {
-                ArmServo.setPosition(0.5);
+            if (gamepad2.x) {
+                ArmServo.setPosition(0.4);
+                pressed = true;
             }
         }
     }

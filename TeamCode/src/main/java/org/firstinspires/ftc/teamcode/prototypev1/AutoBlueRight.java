@@ -14,7 +14,7 @@ public class AutoBlueRight extends LinearOpMode {
     public void runOpMode() {
         hardware.init();
 
-        telemetry.addData("Status", "Hot Stand by");
+        telemetry.addData("Status", "Initialized");
         telemetry.addData("Awaiting User Action", "Waiting for user to begin");
         telemetry.update();
 

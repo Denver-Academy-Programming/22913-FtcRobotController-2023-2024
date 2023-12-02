@@ -57,7 +57,7 @@ public class PrototypeV1AutoBlueRight extends LinearOpMode {
 
         moveForward(1.0F);
         motorStop();
-        turnLeft(0.175F * 2);
+        turnRight(0.175F * 2);
         motorStop();
         moveForward(1.65F * 2);
         motorStop();

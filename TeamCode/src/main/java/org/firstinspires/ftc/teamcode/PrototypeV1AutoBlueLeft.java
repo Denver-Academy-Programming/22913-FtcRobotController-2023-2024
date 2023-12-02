@@ -57,7 +57,7 @@ public class PrototypeV1AutoBlueLeft extends LinearOpMode {
 
         moveForward(0.5F);
         motorStop();
-        turnLeft(0.35F);
+        turnRight(0.35F);
         motorStop();
         moveForward(1.3F);
         motorStop();
@@ -119,8 +119,8 @@ public class PrototypeV1AutoBlueLeft extends LinearOpMode {
         telemetry.update();
 
         while (opModeIsActive() && (runtime.seconds() < time)){
-            motorLeft.setPower(-forwardBackPower);
-            motorRight.setPower(-forwardBackPower);
+            motorLeft.setPower(forwardBackPower);
+            motorRight.setPower(forwardBackPower);
         }
     }
 

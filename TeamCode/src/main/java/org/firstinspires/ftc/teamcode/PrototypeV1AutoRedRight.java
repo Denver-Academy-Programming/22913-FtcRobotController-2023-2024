@@ -59,7 +59,7 @@ public class PrototypeV1AutoRedRight extends LinearOpMode {
         motorStop();
         turnRight(0.35F);
         motorStop();
-        moveForward(0.90F);
+        moveForward(1.0F);
         motorStop();
     }
 

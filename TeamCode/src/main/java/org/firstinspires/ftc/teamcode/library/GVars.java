@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.library;
 
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /*
@@ -15,11 +16,17 @@ public class GVars {
     // The time the script has been running for. This can't be directly
     // modified being a "final" variable. Use the built in reset and get
     // functions in order to work with the variable.
-    public final static ElapsedTime scriptRunTime = new ElapsedTime();
+    public static final ElapsedTime scriptRunTime = new ElapsedTime();
 
     // Powers for turning and moving back and forth.
-    public static float teleopTurnPower = 0.5F; // Speed used for turning while running in TeleOp.
-    public static float teleopMovePower = 0.5F; // Speed used for moving while running in TeleOp.
-    public static final float autoTurnPower = 1.0F; // Speed used for turning while running in Autonomous.
-    public static final float autoMovePower = 1.0F; // Speed used for moving while running in Autonomous.
+    public static float teleopMinTurnPower = -0.5F; // Speed used for turning while running in TeleOp.
+    public static float teleopMinMovePower = -0.5F; // Speed used for moving while running in TeleOp.
+    public static float teleopMaxTurnPower = 0.5F; // Speed used for turning while running in TeleOp.
+    public static float teleopMaxMovePower = 0.5F; // Speed used for moving while running in TeleOp.
+    public static double autoMaxMovePower = 1.0; // Speed used for moving while running in Autonomous.
+    public static double autoMaxTurnPower = 1.0; // Speed used for turning while running in Autonomous.
+
+    public static final DcMotorSimple.Direction FORWARD = DcMotorSimple.Direction.FORWARD;
+    public static final DcMotorSimple.Direction REVERSE = DcMotorSimple.Direction.REVERSE;
+
 }

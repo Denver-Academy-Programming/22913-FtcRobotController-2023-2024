@@ -14,9 +14,9 @@ public class PrototypeV1AutoBlueLeft extends LinearOpMode {
     private DcMotor motorRight = null;
     private final ElapsedTime runtime = new ElapsedTime();
 
-    float rightLeftPower = 1.0f;
-    float forwardBackPower = -1.0f;
-    float turningPower = 1.0f;
+    float rightLeftPower = 0.5f;
+    float forwardBackPower = 0.5f;
+    float turningPower = 0.5f;
 
     @Override
     public void runOpMode() {
@@ -34,8 +34,8 @@ public class PrototypeV1AutoBlueLeft extends LinearOpMode {
             motorLeft = hardwareMap.get(DcMotor.class, "motorLeft");
             motorRight = hardwareMap.get(DcMotor.class, "motorRight");
 
-            motorFront.setDirection(DcMotorSimple.Direction.FORWARD);
-            motorBack.setDirection(DcMotorSimple.Direction.REVERSE);
+            motorFront.setDirection(DcMotorSimple.Direction.REVERSE);
+            motorBack.setDirection(DcMotorSimple.Direction.FORWARD);
             motorRight.setDirection(DcMotorSimple.Direction.FORWARD);
             motorLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         }   catch(IllegalArgumentException e) {
@@ -55,35 +55,35 @@ public class PrototypeV1AutoBlueLeft extends LinearOpMode {
         //Waiting for program to begin and user to start the application.
         waitForStart();
 
-        moveForward(0.25F);
-        motorStop();
-        turnLeft(0.175F);
-        motorStop();
-        moveForward(0.65F);
-        motorStop();
-        moveBackward(0.15F);
-        motorStop();
-        turnRight(0.175F);
-        motorStop();
-        moveForward(0.25F);
-        motorStop();
-        turnRight(0.175F);
-        motorStop();
-        moveForward(1.0F);
-        motorStop();
-        turnRight(0.35F);
-        motorStop();
-        moveForward(1.15F);
-        motorStop();
-        moveBackward(0.15F);
-        motorStop();
-        turnLeft(0.175F);
-        motorStop();
         moveForward(0.5F);
         motorStop();
-        turnRight(0.175F);
+        turnLeft(0.175F * 2);
         motorStop();
-        moveForward(0.25F);
+        moveForward(0.65F * 2);
+        motorStop();
+        moveBackward(0.15F * 2);
+        motorStop();
+        turnRight(0.175F * 2);
+        motorStop();
+        moveForward(0.25F * 2);
+        motorStop();
+        turnRight(0.175F * 2);
+        motorStop();
+        moveForward(1.0F * 2);
+        motorStop();
+        turnRight(0.35F * 2);
+        motorStop();
+        moveForward(1.15F * 2);
+        motorStop();
+        moveBackward(0.15F * 2);
+        motorStop();
+        turnLeft(0.175F * 2);
+        motorStop();
+        moveForward(0.5F * 2);
+        motorStop();
+        turnRight(0.175F * 2);
+        motorStop();
+        moveForward(0.25F * 2);
         motorStop();
     }
     // Time 0.35F = About 90 degree turn

@@ -48,8 +48,8 @@ public class PrototypeV1RobotDrive extends LinearOpMode {
             motorRight = hardwareMap.get(DcMotor.class, "motorRight");
             motorFront.setDirection(DcMotorSimple.Direction.FORWARD);
             motorBack.setDirection(DcMotorSimple.Direction.REVERSE);
-            motorLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-            motorRight.setDirection(DcMotorSimple.Direction.FORWARD);
+            motorLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+            motorRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
             // Servo for our paper plane launcher
             servoPlaneLauncher = hardwareMap.get(Servo.class, "servoPlaneLauncher");
@@ -71,7 +71,7 @@ public class PrototypeV1RobotDrive extends LinearOpMode {
         while (opModeIsActive()) {
             // Controller inputs
             leftRightPower = gamepad1.left_stick_x;
-            forwardBackPower = gamepad1.right_stick_y;
+            forwardBackPower = -gamepad1.right_stick_y;
 
             // Display on the Driver Hub info about our robot while its running
             telemetry.addData("Status", "Script is running!");

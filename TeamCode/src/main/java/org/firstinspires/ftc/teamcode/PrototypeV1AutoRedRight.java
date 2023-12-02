@@ -15,7 +15,7 @@ public class PrototypeV1AutoRedRight extends LinearOpMode {
     private final ElapsedTime runtime = new ElapsedTime();
 
     float rightLeftPower = 1.0f;
-    float forwardBackPower = -1.0f;
+    float forwardBackPower = 0.5f;
     float turningPower = 1.0f;
 
     @Override

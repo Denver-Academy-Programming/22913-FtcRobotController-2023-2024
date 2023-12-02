@@ -14,9 +14,9 @@ public class PrototypeV1AutoRedRight extends LinearOpMode {
     private DcMotor motorRight = null;
     private final ElapsedTime runtime = new ElapsedTime();
 
-    float rightLeftPower = 1.0f;
+    float rightLeftPower = 0.5f;
     float forwardBackPower = 0.5f;
-    float turningPower = 1.0f;
+    float turningPower = 0.5f;
 
     @Override
     public void runOpMode() {
@@ -36,8 +36,8 @@ public class PrototypeV1AutoRedRight extends LinearOpMode {
 
             motorFront.setDirection(DcMotorSimple.Direction.FORWARD);
             motorBack.setDirection(DcMotorSimple.Direction.REVERSE);
-            motorRight.setDirection(DcMotorSimple.Direction.FORWARD);
-            motorLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+            motorLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+            motorRight.setDirection(DcMotorSimple.Direction.REVERSE);
         }   catch(IllegalArgumentException e) {
             throw new RuntimeException(
                     "A error occurred in the initialization of the script  \n" +
@@ -55,11 +55,11 @@ public class PrototypeV1AutoRedRight extends LinearOpMode {
         //Waiting for program to begin and user to start the application.
         waitForStart();
 
-        moveForward(0.25F);
+        moveForward(0.75F);
         motorStop();
-        turnRight(0.175F);
+        turnRight(0.35F);
         motorStop();
-        moveForward(0.65F);
+        moveForward(0.90F);
         motorStop();
     }
 
@@ -69,10 +69,10 @@ public class PrototypeV1AutoRedRight extends LinearOpMode {
         telemetry.update();
 
         while (opModeIsActive() && (runtime.seconds() < time)){
-            motorFront.setPower(-turningPower);
-            motorBack.setPower(turningPower);
-            motorLeft.setPower(-turningPower);
-            motorRight.setPower(turningPower);
+            motorFront.setPower(turningPower);
+            motorBack.setPower(-turningPower);
+            motorLeft.setPower(turningPower);
+            motorRight.setPower(-turningPower);
         }
     }
     // Time 0.35F = About 90 degree turn
@@ -82,10 +82,10 @@ public class PrototypeV1AutoRedRight extends LinearOpMode {
         telemetry.update();
 
         while (opModeIsActive() && (runtime.seconds() < time)){
-            motorFront.setPower(turningPower);
-            motorBack.setPower(-turningPower);
-            motorLeft.setPower(turningPower);
-            motorRight.setPower(-turningPower);
+            motorFront.setPower(-turningPower);
+            motorBack.setPower(turningPower);
+            motorLeft.setPower(-turningPower);
+            motorRight.setPower(turningPower);
         }
     }
 

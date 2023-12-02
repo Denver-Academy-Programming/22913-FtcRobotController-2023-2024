@@ -70,7 +70,7 @@ public class PrototypeV1RobotDrive extends LinearOpMode {
 
         while (opModeIsActive()) {
             // Controller inputs
-            leftRightPower = gamepad1.left_stick_x;
+            leftRightPower = -gamepad1.left_stick_x;
             forwardBackPower = -gamepad1.right_stick_y;
 
             // Display on the Driver Hub info about our robot while its running
@@ -83,23 +83,23 @@ public class PrototypeV1RobotDrive extends LinearOpMode {
             telemetry.update();
 
             // Set the motors power to what the direction of which stick is being pressed.
-            motorFront.setPower(leftRightPower * 0.75);
-            motorBack.setPower(leftRightPower * 0.75);
-            motorLeft.setPower(forwardBackPower * -0.75);
-            motorRight.setPower(forwardBackPower * -0.75);
+            motorFront.setPower(leftRightPower);
+            motorBack.setPower(leftRightPower);
+            motorLeft.setPower(forwardBackPower);
+            motorRight.setPower(forwardBackPower);
 
             // Checking if the bumper buttons are pressed to turn the robot.
             if (gamepad1.left_bumper) {
-                motorFront.setPower(-turnPower);
-                motorBack.setPower(turnPower);
-                motorLeft.setPower(-turnPower);
-                motorRight.setPower(turnPower);
-            }
-            if (gamepad1.right_bumper) {
                 motorFront.setPower(turnPower);
                 motorBack.setPower(-turnPower);
                 motorLeft.setPower(turnPower);
                 motorRight.setPower(-turnPower);
+            }
+            if (gamepad1.right_bumper) {
+                motorFront.setPower(-turnPower);
+                motorBack.setPower(turnPower);
+                motorLeft.setPower(-turnPower);
+                motorRight.setPower(turnPower);
             }
 
             if (gamepad2.x) {

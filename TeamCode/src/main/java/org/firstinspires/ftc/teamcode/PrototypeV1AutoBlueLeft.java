@@ -34,10 +34,10 @@ public class PrototypeV1AutoBlueLeft extends LinearOpMode {
             motorLeft = hardwareMap.get(DcMotor.class, "motorLeft");
             motorRight = hardwareMap.get(DcMotor.class, "motorRight");
 
-            motorFront.setDirection(DcMotorSimple.Direction.REVERSE);
-            motorBack.setDirection(DcMotorSimple.Direction.FORWARD);
-            motorRight.setDirection(DcMotorSimple.Direction.FORWARD);
-            motorLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+            motorFront.setDirection(DcMotorSimple.Direction.FORWARD);
+            motorBack.setDirection(DcMotorSimple.Direction.REVERSE);
+            motorLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+            motorRight.setDirection(DcMotorSimple.Direction.REVERSE);
         }   catch(IllegalArgumentException e) {
             throw new RuntimeException(
                     "A error occurred in the initialization of the script  \n" +
@@ -57,34 +57,34 @@ public class PrototypeV1AutoBlueLeft extends LinearOpMode {
 
         moveForward(0.5F);
         motorStop();
-        turnLeft(0.175F * 2);
+        turnLeft(0.35F);
         motorStop();
-        moveForward(0.65F * 2);
+        moveForward(1.3F);
         motorStop();
-        moveBackward(0.15F * 2);
-        motorStop();
-        turnRight(0.175F * 2);
-        motorStop();
-        moveForward(0.25F * 2);
-        motorStop();
-        turnRight(0.175F * 2);
-        motorStop();
-        moveForward(1.0F * 2);
-        motorStop();
-        turnRight(0.35F * 2);
-        motorStop();
-        moveForward(1.15F * 2);
-        motorStop();
-        moveBackward(0.15F * 2);
-        motorStop();
-        turnLeft(0.175F * 2);
-        motorStop();
-        moveForward(0.5F * 2);
-        motorStop();
-        turnRight(0.175F * 2);
-        motorStop();
-        moveForward(0.25F * 2);
-        motorStop();
+//        moveBackward(0.15F * 2);
+//        motorStop();
+//        turnRight(0.35F);
+//        motorStop();
+//        moveForward(0.25F * 2);
+//        motorStop();
+//        turnRight(0.35F);
+//        motorStop();
+//        moveForward(1.0F * 2);
+//        motorStop();
+//        turnRight(0.35F * 2);
+//        motorStop();
+//        moveForward(1.15F * 2);
+//        motorStop();
+//        moveBackward(0.15F * 2);
+//        motorStop();
+//        turnLeft(0.35F);
+//        motorStop();
+//        moveForward(0.5F * 2);
+//        motorStop();
+//        turnRight(0.175F * 2);
+//        motorStop();
+//        moveForward(0.25F * 2);
+//        motorStop();
     }
     // Time 0.35F = About 90 degree turn
     private void turnLeft(float time){
@@ -119,8 +119,8 @@ public class PrototypeV1AutoBlueLeft extends LinearOpMode {
         telemetry.update();
 
         while (opModeIsActive() && (runtime.seconds() < time)){
-            motorLeft.setPower(forwardBackPower);
-            motorRight.setPower(forwardBackPower);
+            motorLeft.setPower(-forwardBackPower);
+            motorRight.setPower(-forwardBackPower);
         }
     }
 
@@ -130,8 +130,8 @@ public class PrototypeV1AutoBlueLeft extends LinearOpMode {
         telemetry.update();
 
         while (opModeIsActive() && (runtime.seconds() < time)){
-            motorLeft.setPower(-forwardBackPower);
-            motorRight.setPower(-forwardBackPower);
+            motorLeft.setPower(forwardBackPower);
+            motorRight.setPower(forwardBackPower);
         }
     }
 

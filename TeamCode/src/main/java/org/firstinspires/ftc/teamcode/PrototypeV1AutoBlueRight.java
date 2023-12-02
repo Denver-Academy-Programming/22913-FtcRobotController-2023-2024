@@ -8,16 +8,15 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name = "Prototype V1 Auto Blue Right", group="PrototypeV1")
 public class PrototypeV1AutoBlueRight extends LinearOpMode {
-    /* Declare OpMode members.*/
     private DcMotor motorFront = null;
     private DcMotor motorBack = null;
     private DcMotor motorLeft = null;
     private DcMotor motorRight = null;
     private final ElapsedTime runtime = new ElapsedTime();
 
-    float rightLeftPower = 0.5f;
-    float forwardBackPower = 0.5f;
-    float turningPower = 0.5f;
+    float rightLeftPower = 1.0f;
+    float forwardBackPower = -1.0f;
+    float turningPower = 1.0f;
 
     @Override
     public void runOpMode() {
@@ -35,8 +34,8 @@ public class PrototypeV1AutoBlueRight extends LinearOpMode {
             motorLeft = hardwareMap.get(DcMotor.class, "motorLeft");
             motorRight = hardwareMap.get(DcMotor.class, "motorRight");
 
-            motorFront.setDirection(DcMotorSimple.Direction.REVERSE);
-            motorBack.setDirection(DcMotorSimple.Direction.FORWARD);
+            motorFront.setDirection(DcMotorSimple.Direction.FORWARD);
+            motorBack.setDirection(DcMotorSimple.Direction.REVERSE);
             motorRight.setDirection(DcMotorSimple.Direction.FORWARD);
             motorLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         }   catch(IllegalArgumentException e) {
@@ -56,11 +55,35 @@ public class PrototypeV1AutoBlueRight extends LinearOpMode {
         //Waiting for program to begin and user to start the application.
         waitForStart();
 
-        moveForward(1);
+        moveForward(0.5F);
         motorStop();
-        turnLeft(0.35F);
+        turnLeft(0.175F);
         motorStop();
-        moveForward(3.30F);
+        moveForward(1.65F);
+        motorStop();
+        moveBackward(0.15F);
+        motorStop();
+        turnRight(0.175F);
+        motorStop();
+        moveForward(0.25F);
+        motorStop();
+        turnRight(0.175F);
+        motorStop();
+        moveForward(1.0F);
+        motorStop();
+        turnRight(0.35F);
+        motorStop();
+        moveForward(1.15F);
+        motorStop();
+        moveBackward(0.15F);
+        motorStop();
+        turnLeft(0.175F);
+        motorStop();
+        moveForward(0.5F);
+        motorStop();
+        turnRight(0.175F);
+        motorStop();
+        moveForward(0.25F);
         motorStop();
     }
     // Time 0.35F = About 90 degree turn
@@ -98,6 +121,17 @@ public class PrototypeV1AutoBlueRight extends LinearOpMode {
         while (opModeIsActive() && (runtime.seconds() < time)){
             motorLeft.setPower(forwardBackPower);
             motorRight.setPower(forwardBackPower);
+        }
+    }
+
+    private void moveBackward(float time){
+        runtime.reset();
+        telemetry.addData("Moving Backward Time", time);
+        telemetry.update();
+
+        while (opModeIsActive() && (runtime.seconds() < time)){
+            motorLeft.setPower(-forwardBackPower);
+            motorRight.setPower(-forwardBackPower);
         }
     }
 

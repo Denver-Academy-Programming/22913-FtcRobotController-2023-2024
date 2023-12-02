@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name = "Prototype V1 Robot Script (THIS ONE DRIVERS!!!)", group = "Prototype V1 Scripts")
@@ -19,6 +20,9 @@ public class PrototypeV1RobotDrive extends LinearOpMode {
     DcMotor motorLeft = null;
     DcMotor motorRight = null;
 
+    // Servo
+    Servo servoPlaneLauncher = null;
+
     // Power for motors bound to the controller left and right sticks.
     // leftRightPower is for the front and back motors for moving left and right.
     // forwardBackPower is for the left and right motors for moving forward and back.
@@ -26,6 +30,8 @@ public class PrototypeV1RobotDrive extends LinearOpMode {
     float leftRightPower;
     float forwardBackPower;
     float turnPower = 0.5F;
+
+    boolean planeLaunched = false;
 
     @Override
     public void runOpMode() {
@@ -40,10 +46,15 @@ public class PrototypeV1RobotDrive extends LinearOpMode {
             motorBack = hardwareMap.get(DcMotor.class, "motorBack");
             motorLeft = hardwareMap.get(DcMotor.class, "motorLeft");
             motorRight = hardwareMap.get(DcMotor.class, "motorRight");
-            motorFront.setDirection(DcMotorSimple.Direction.REVERSE);
-            motorBack.setDirection(DcMotorSimple.Direction.FORWARD);
+            motorFront.setDirection(DcMotorSimple.Direction.FORWARD);
+            motorBack.setDirection(DcMotorSimple.Direction.REVERSE);
             motorLeft.setDirection(DcMotorSimple.Direction.REVERSE);
             motorRight.setDirection(DcMotorSimple.Direction.FORWARD);
+
+            // Servo for our paper plane launcher
+            servoPlaneLauncher = hardwareMap.get(Servo.class, "servoPlaneLauncher");
+            servoPlaneLauncher.scaleRange(0.4, 5.0);
+            servoPlaneLauncher.setPosition(5.0);
         } catch (IllegalArgumentException e) {
             throw new RuntimeException(
                 "An error occurred with the initialization of the script!\n" +
@@ -64,9 +75,11 @@ public class PrototypeV1RobotDrive extends LinearOpMode {
 
             // Display on the Driver Hub info about our robot while its running
             telemetry.addData("Status", "Script is running!");
-            telemetry.addData("Run Time", runtime.toString());
+            telemetry.addData("Run Time", runtime.seconds());
             telemetry.addData("leftRightPower", leftRightPower);
             telemetry.addData("forwardBackPower", forwardBackPower);
+            telemetry.addData("Paper Plane Launched?", planeLaunched);
+            telemetry.addData("STOP", "PRESS B ON EITHER CONTROLLER TO STOP!");
             telemetry.update();
 
             // Set the motors power to what the direction of which stick is being pressed.
@@ -89,8 +102,13 @@ public class PrototypeV1RobotDrive extends LinearOpMode {
                 motorRight.setPower(-turnPower);
             }
 
+            if (gamepad2.x) {
+                servoPlaneLauncher.setPosition(0.4);
+                planeLaunched = true;
+            }
+
             // Pressing B on the controller will stop the TeleOP script.
-            if (gamepad1.b) {
+            if (gamepad1.b || gamepad2.b) {
                 requestOpModeStop();
             }
         }

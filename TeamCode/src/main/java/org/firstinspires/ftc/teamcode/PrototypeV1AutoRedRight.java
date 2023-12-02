@@ -8,16 +8,15 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name = "Prototype V1 Auto Red Right", group="PrototypeV1")
 public class PrototypeV1AutoRedRight extends LinearOpMode {
-    /* Declare OpMode members.*/
     private DcMotor motorFront = null;
     private DcMotor motorBack = null;
     private DcMotor motorLeft = null;
     private DcMotor motorRight = null;
     private final ElapsedTime runtime = new ElapsedTime();
 
-    float rightLeftPower = 0.5f;
-    float forwardBackPower = 0.5f;
-    float turningPower = 0.5f;
+    float rightLeftPower = 1.0f;
+    float forwardBackPower = -1.0f;
+    float turningPower = 1.0f;
 
     @Override
     public void runOpMode() {
@@ -35,8 +34,8 @@ public class PrototypeV1AutoRedRight extends LinearOpMode {
             motorLeft = hardwareMap.get(DcMotor.class, "motorLeft");
             motorRight = hardwareMap.get(DcMotor.class, "motorRight");
 
-            motorFront.setDirection(DcMotorSimple.Direction.REVERSE);
-            motorBack.setDirection(DcMotorSimple.Direction.FORWARD);
+            motorFront.setDirection(DcMotorSimple.Direction.FORWARD);
+            motorBack.setDirection(DcMotorSimple.Direction.REVERSE);
             motorRight.setDirection(DcMotorSimple.Direction.FORWARD);
             motorLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         }   catch(IllegalArgumentException e) {
@@ -56,11 +55,11 @@ public class PrototypeV1AutoRedRight extends LinearOpMode {
         //Waiting for program to begin and user to start the application.
         waitForStart();
 
-        moveForward(1);
+        moveForward(0.25F);
         motorStop();
-        turnRight(0.35F);
+        turnRight(0.175F);
         motorStop();
-        moveForward(1.30F);
+        moveForward(0.65F);
         motorStop();
     }
 

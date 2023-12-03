@@ -23,8 +23,8 @@ public class GVars {
     public static float teleopMinMovePower = -0.5F; // Speed used for moving while running in TeleOp.
     public static float teleopMaxTurnPower = 0.5F; // Speed used for turning while running in TeleOp.
     public static float teleopMaxMovePower = 0.5F; // Speed used for moving while running in TeleOp.
-    public static double autoMaxMovePower = 1.0; // Speed used for moving while running in Autonomous.
-    public static double autoMaxTurnPower = 1.0; // Speed used for turning while running in Autonomous.
+    public static final double autoMaxMovePower = 1.0; // Speed used for moving while running in Autonomous.
+    public static final double autoMaxTurnPower = 1.0; // Speed used for turning while running in Autonomous.
 
     public static final DcMotorSimple.Direction FORWARD = DcMotorSimple.Direction.FORWARD;
     public static final DcMotorSimple.Direction REVERSE = DcMotorSimple.Direction.REVERSE;

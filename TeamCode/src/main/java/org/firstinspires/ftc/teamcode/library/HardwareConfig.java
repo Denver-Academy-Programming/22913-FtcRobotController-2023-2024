@@ -1,12 +1,9 @@
 package org.firstinspires.ftc.teamcode.library;
 
-import org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion;
-
 import android.util.Size;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -25,7 +22,7 @@ public class HardwareConfig {
        with the opMode. This allows accessing LinearOpMode operations
        while in a class that doesn't extend LinearOpMode.
     */
-    public static LinearOpMode opMode = null;
+    public LinearOpMode opMode;
     public HardwareConfig(LinearOpMode currentOpMode) {opMode = currentOpMode;}
 
     // Motors
@@ -49,32 +46,32 @@ public class HardwareConfig {
       direction so that the driving works correctly.
     */
     private void driveInit() {
-        motorFront = BlocksOpModeCompanion.hardwareMap.get(DcMotor.class, "motorFront");
-        motorBack = BlocksOpModeCompanion.hardwareMap.get(DcMotor.class, "motorBack");
-        motorLeft = BlocksOpModeCompanion.hardwareMap.get(DcMotor.class, "motorLeft");
-        motorRight = BlocksOpModeCompanion.hardwareMap.get(DcMotor.class, "motorRight");
-        motorFront.setDirection(GVars.REVERSE);
-        motorBack.setDirection(GVars.FORWARD);
-        motorRight.setDirection(GVars.FORWARD);
-        motorLeft.setDirection(GVars.REVERSE);
+        motorFront = opMode.hardwareMap.get(DcMotor.class, "motorFront");
+        motorBack = opMode.hardwareMap.get(DcMotor.class, "motorBack");
+        motorLeft = opMode.hardwareMap.get(DcMotor.class, "motorLeft");
+        motorRight = opMode.hardwareMap.get(DcMotor.class, "motorRight");
+        motorFront.setDirection(GVars.FORWARD);
+        motorBack.setDirection(GVars.REVERSE);
+        motorLeft.setDirection(GVars.FORWARD);
+        motorRight.setDirection(GVars.REVERSE);
     }
 
     private void armInit() {
-        motorArm = BlocksOpModeCompanion.hardwareMap.get(DcMotor.class, "motorArm");
+        motorArm = opMode.hardwareMap.get(DcMotor.class, "motorArm");
         motorArm.setDirection(GVars.FORWARD);
-        servoClaw = BlocksOpModeCompanion.hardwareMap.get(Servo.class, "servoClaw");
+        servoClaw = opMode.hardwareMap.get(Servo.class, "servoClaw");
         servoClaw.scaleRange(0.0, 0.3);
         servoClaw.setPosition(0.0);
     }
 
     private void launcherInit() {
-        servoPlaneLauncher = BlocksOpModeCompanion.hardwareMap.get(Servo.class, "servoPlaneLauncher");
+        servoPlaneLauncher = opMode.hardwareMap.get(Servo.class, "servoPlaneLauncher");
         servoPlaneLauncher.scaleRange(0.4, 5.0);
         servoPlaneLauncher.setPosition(5.0);
     }
 
     private void aprilTagsInit() {
-        webcam = BlocksOpModeCompanion.hardwareMap.get(WebcamName.class, "Webcam 1");
+        webcam = opMode.hardwareMap.get(WebcamName.class, "Webcam 1");
 
         // Create the AprilTag processor.
         AprilTagProcessor aprilTag = new AprilTagProcessor.Builder()
@@ -124,13 +121,13 @@ public class HardwareConfig {
                 aprilTagsInit();
             }
 
-            BlocksOpModeCompanion.telemetry.addData("HardwareConfig completed!", "Below are enabled hardware...");
-            BlocksOpModeCompanion.telemetry.addData("Drive", drive);
-            BlocksOpModeCompanion.telemetry.addData("Arm", arm);
-            BlocksOpModeCompanion.telemetry.addData("Launcher", launcher);
-            BlocksOpModeCompanion.telemetry.addData("AprilTags", apriltags);
-            BlocksOpModeCompanion.telemetry.addData("Current OpMode Type", opMode);
-            BlocksOpModeCompanion.telemetry.addLine();
+            opMode.telemetry.addData("HardwareConfig completed!", "Below are enabled hardware...");
+            opMode.telemetry.addData("Drive", drive);
+            opMode.telemetry.addData("Arm", arm);
+            opMode.telemetry.addData("Launcher", launcher);
+            opMode.telemetry.addData("AprilTags", apriltags);
+            opMode.telemetry.addData("Current OpMode Type", opMode);
+            opMode.telemetry.addLine();
         } catch (IllegalArgumentException e) {
             throw new RuntimeException(
                     "A error occurred in the initialization of the script \n" +

@@ -8,8 +8,8 @@ import org.firstinspires.ftc.teamcode.library.HardwareConfig;
 
 @Autonomous(name = "Prototype V1 Auto Blue Left", group = "PrototypeV1")
 public class AutoBlueLeft extends LinearOpMode {
-    HardwareConfig hardware = new HardwareConfig(this);
-    MoveOperations moveOperation = new MoveOperations(this);
+    final HardwareConfig hardware = new HardwareConfig(this);
+    final MoveOperations moveOperation = new MoveOperations(this);
 
     @Override
     public void runOpMode() {

@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.library.HardwareConfig;
 
 @TeleOp(name = "Prototype V1 Robot Script (THIS ONE DRIVERS!!!)", group = "Prototype V1 Scripts")
 public class PrototypeV1RobotDrive extends LinearOpMode {
-    HardwareConfig hardware = new HardwareConfig(this);
+    final HardwareConfig hardware = new HardwareConfig(this);
 
     private boolean planeLaunched = false;
 

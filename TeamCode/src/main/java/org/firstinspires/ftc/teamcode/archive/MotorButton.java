@@ -5,7 +5,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 
 @TeleOp
 @Disabled
@@ -21,7 +20,6 @@ public class MotorButton extends LinearOpMode {
             touchSensor = hardwareMap.get(DigitalChannel.class, "digitalTouch");
             touchSensor.setMode(DigitalChannel.Mode.INPUT);
         } catch (IllegalArgumentException e) {
-            // Prettyfy error for non-tech peoples
             throw new RuntimeException(e);
         }
         telemetry.addData("Status", "Initialized");

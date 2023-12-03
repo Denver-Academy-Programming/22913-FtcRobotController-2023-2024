@@ -3,8 +3,6 @@ package org.firstinspires.ftc.teamcode.library;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion;
-
 /*
     This script is for giving access to a set of basic
     robot movement functions that can be used in both
@@ -37,8 +35,8 @@ public class MoveOperations {
     public void turnLeft(float time) {
         scriptRunTime.reset();
 
-        BlocksOpModeCompanion.telemetry.addData("Turning Right Time", time);
-        BlocksOpModeCompanion.telemetry.update();
+        opMode.telemetry.addData("Turning Right Time", time);
+        opMode.telemetry.update();
 
         while (opMode.opModeIsActive() && (scriptRunTime.seconds() < time)){
             hardware.motorFront.setPower(-GVars.autoMaxTurnPower);
@@ -58,8 +56,8 @@ public class MoveOperations {
     */
     public void turnRight(float time) {
         scriptRunTime.reset();
-        BlocksOpModeCompanion.telemetry.addData("Turning Right Time", time);
-        BlocksOpModeCompanion.telemetry.update();
+        opMode.telemetry.addData("Turning Right Time", time);
+        opMode.telemetry.update();
 
         while (opMode.opModeIsActive() && (scriptRunTime.seconds() < time)) {
             hardware.motorFront.setPower(GVars.autoMaxTurnPower);
@@ -79,8 +77,8 @@ public class MoveOperations {
     */
     public void moveForward(float time) {
         scriptRunTime.reset();
-        BlocksOpModeCompanion.telemetry.addData("Moving Forward Time", time);
-        BlocksOpModeCompanion.telemetry.update();
+        opMode.telemetry.addData("Moving Forward Time", time);
+        opMode.telemetry.update();
 
         while (opMode.opModeIsActive() && (scriptRunTime.seconds() < time)){
             hardware.motorLeft.setPower(GVars.autoMaxMovePower);
@@ -98,8 +96,8 @@ public class MoveOperations {
     */
     public void moveBackward(float time) {
         scriptRunTime.reset();
-        BlocksOpModeCompanion.telemetry.addData("Moving Forward Time", time);
-        BlocksOpModeCompanion.telemetry.update();
+        opMode.telemetry.addData("Moving Forward Time", time);
+        opMode.telemetry.update();
 
         while (opMode.opModeIsActive() && (scriptRunTime.seconds() < time)){
             hardware.motorLeft.setPower(-GVars.autoMaxMovePower);

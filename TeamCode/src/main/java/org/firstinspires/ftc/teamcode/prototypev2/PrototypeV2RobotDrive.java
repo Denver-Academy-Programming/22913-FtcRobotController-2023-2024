@@ -1,18 +1,16 @@
-package org.firstinspires.ftc.teamcode.prototypev1;
+package org.firstinspires.ftc.teamcode.prototypev2;
 
 import static org.firstinspires.ftc.teamcode.library.GVars.*;
 import static org.firstinspires.ftc.teamcode.library.HardwareControl.*;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.library.HardwareControl;
 
-@Disabled
 @TeleOp(name = "Prototype V1 Robot Script (THIS ONE DRIVERS!!!)", group = "Prototype V1 Scripts")
-public class PrototypeV1RobotDrive extends LinearOpMode {
+public class PrototypeV2RobotDrive extends LinearOpMode {
     final HardwareControl hardware = new HardwareControl(this);
 
     private boolean planeLaunched = false;

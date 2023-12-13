@@ -3,11 +3,13 @@ package org.firstinspires.ftc.teamcode.prototypev1;
 import static org.firstinspires.ftc.teamcode.library.HardwareControl.*;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.library.GVars;
 import org.firstinspires.ftc.teamcode.library.HardwareControl;
 
+@Disabled
 @Autonomous(name = "Prototype V1 Auto Red Left", group="PrototypeV1")
 public class AutoRedLeft extends LinearOpMode {
     final HardwareControl hardware = new HardwareControl(this);

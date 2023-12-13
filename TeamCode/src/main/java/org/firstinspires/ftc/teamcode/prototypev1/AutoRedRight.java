@@ -1,16 +1,16 @@
 package org.firstinspires.ftc.teamcode.prototypev1;
 
+import static org.firstinspires.ftc.teamcode.library.HardwareControl.*;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.library.GVars;
-import org.firstinspires.ftc.teamcode.library.MoveOperations;
-import org.firstinspires.ftc.teamcode.library.HardwareConfig;
+import org.firstinspires.ftc.teamcode.library.HardwareControl;
 
 @Autonomous(name = "Prototype V1 Auto Red Right", group="PrototypeV1")
 public class AutoRedRight extends LinearOpMode {
-    final HardwareConfig hardware = new HardwareConfig(this);
-    final MoveOperations moveOperation = new MoveOperations(this);
+    final HardwareControl hardware = new HardwareControl(this);
 
     @Override
     public void runOpMode() {
@@ -24,8 +24,8 @@ public class AutoRedRight extends LinearOpMode {
         waitForStart();
         GVars.scriptRunTime.reset();
 
-        moveOperation.moveForward(0.5F);
-        moveOperation.turnRight(0.175F);
-        moveOperation.moveForward(0.65F);
+        moveForward(this, 0.5F);
+        turnRight(this, 0.175F);
+        moveForward(this, 0.65F);
     }
 }

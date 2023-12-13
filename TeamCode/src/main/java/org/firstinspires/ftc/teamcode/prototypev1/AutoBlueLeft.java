@@ -1,15 +1,15 @@
 package org.firstinspires.ftc.teamcode.prototypev1;
 
+import static org.firstinspires.ftc.teamcode.library.HardwareControl.*;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.library.MoveOperations;
-import org.firstinspires.ftc.teamcode.library.HardwareConfig;
+import org.firstinspires.ftc.teamcode.library.HardwareControl;
 
 @Autonomous(name = "Prototype V1 Auto Blue Left", group = "PrototypeV1")
 public class AutoBlueLeft extends LinearOpMode {
-    final HardwareConfig hardware = new HardwareConfig(this);
-    final MoveOperations moveOperation = new MoveOperations(this);
+    final HardwareControl hardware = new HardwareControl(this);
 
     @Override
     public void runOpMode() {
@@ -22,8 +22,8 @@ public class AutoBlueLeft extends LinearOpMode {
         //Waiting for program to begin and user to start the application.
         waitForStart();
 
-        moveOperation.moveForward(0.5F);
-        moveOperation.turnLeft(0.175F);
-        moveOperation.moveForward(0.65F);
+        moveForward(this, 0.5F);
+        turnLeft(this, 0.175F);
+        moveForward(this,0.65F);
     }
 }

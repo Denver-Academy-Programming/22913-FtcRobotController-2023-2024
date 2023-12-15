@@ -1,17 +1,17 @@
 package org.firstinspires.ftc.teamcode.prototypev2;
 
 import static org.firstinspires.ftc.teamcode.library.GVars.*;
-import static org.firstinspires.ftc.teamcode.library.HardwareControl.*;
+import static org.firstinspires.ftc.teamcode.library.HardwareControlV2.*;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.teamcode.library.HardwareControl;
+import org.firstinspires.ftc.teamcode.library.HardwareControlV2;
 
-@TeleOp(name = "Prototype V1 Robot Script (THIS ONE DRIVERS!!!)", group = "Prototype V1 Scripts")
+@TeleOp(name = "Prototype V2 Robot Script (THIS ONE DRIVERS!!!)", group = "Prototype V2 Scripts")
 public class PrototypeV2RobotDrive extends LinearOpMode {
-    final HardwareControl hardware = new HardwareControl(this);
+    final HardwareControlV2 hardware = new HardwareControlV2(this);
 
     private boolean planeLaunched = false;
 
@@ -28,7 +28,7 @@ public class PrototypeV2RobotDrive extends LinearOpMode {
 
         while (opModeIsActive()) {
             // Controller inputs
-            float leftRightPower = Range.clip(gamepad1.left_stick_x, teleopMinTurnPower, teleopMaxTurnPower);
+            float leftRightPower = Range.clip(gamepad1.right_stick_x, teleopMinTurnPower, teleopMaxTurnPower);
             float forwardBackPower = Range.clip(gamepad1.right_stick_y, teleopMinMovePower, teleopMaxMovePower);
 
             // Display on the Driver Hub info about our robot while its running
@@ -41,23 +41,23 @@ public class PrototypeV2RobotDrive extends LinearOpMode {
             telemetry.update();
 
             // Set the motors power to what the direction of which stick is being pressed.
-            motorFront.setPower(leftRightPower);
-            motorBack.setPower(leftRightPower);
-            motorLeft.setPower(forwardBackPower);
-            motorRight.setPower(forwardBackPower);
+            motorFrontLeft.setPower(leftRightPower);
+            motorFrontRight.setPower(leftRightPower);
+            motorBackLeft.setPower(forwardBackPower);
+            motorBackRight.setPower(forwardBackPower);
 
             // Checking if the bumper buttons are pressed to turn the robot.
             if (gamepad1.left_bumper) {
-                motorFront.setPower(-teleopMaxTurnPower);
-                motorBack.setPower(teleopMaxTurnPower);
-                motorLeft.setPower(-teleopMaxTurnPower);
-                motorRight.setPower(teleopMaxTurnPower);
+                motorFrontLeft.setPower(-teleopMaxTurnPower);
+                motorFrontRight.setPower(teleopMaxTurnPower);
+                motorBackLeft.setPower(-teleopMaxTurnPower);
+                motorBackRight.setPower(teleopMaxTurnPower);
             }
             if (gamepad1.right_bumper) {
-                motorFront.setPower(teleopMaxTurnPower);
-                motorBack.setPower(-teleopMaxTurnPower);
-                motorLeft.setPower(teleopMaxTurnPower);
-                motorRight.setPower(-teleopMaxTurnPower);
+                motorFrontLeft.setPower(teleopMaxTurnPower);
+                motorFrontRight.setPower(-teleopMaxTurnPower);
+                motorBackLeft.setPower(teleopMaxTurnPower);
+                motorBackRight.setPower(-teleopMaxTurnPower);
             }
 
             if (gamepad1.x) {

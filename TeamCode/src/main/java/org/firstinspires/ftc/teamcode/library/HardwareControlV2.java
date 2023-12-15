@@ -12,11 +12,11 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 /*
     This library script is used to setup and control certain hardware
-    functions for the Prototype V1 Robot. Similar to GVars, hardware
+    functions for the Prototype V2 Robot. Similar to GVars, hardware
     can be retrieved from this library script to be used globally throughout
     TeleOp or Autonomous OpModes.
 */
-public class HardwareControl {
+public class HardwareControlV2 {
     /*
        Get access to the methods in OpMode defining a LinearOpMode
        variable then using a constructor to define the activeOpMode
@@ -24,18 +24,22 @@ public class HardwareControl {
        while in a class that doesn't extend LinearOpMode.
     */
     public LinearOpMode opMode;
-    public HardwareControl(LinearOpMode currentOpMode) {opMode = currentOpMode;}
+    public HardwareControlV2(LinearOpMode currentOpMode) {opMode = currentOpMode;}
+
+    private static final double autoMaxMovePower = GVars.autoMaxMovePower; // Speed used for moving while running in Autonomous.
+    private static final double autoMaxTurnPower = GVars.autoMaxTurnPower; // Speed used for turning while running in Autonomous.
 
     // Motors
-    public static DcMotor motorFront = null;
-    public static DcMotor motorBack = null;
-    public static DcMotor motorLeft = null;
-    public static DcMotor motorRight = null;
-    public static DcMotor motorArm = null;
+    public static DcMotor motorFrontLeft = null; // Control Hub: Port 0
+    public static DcMotor motorFrontRight = null; // Control Hub: Port 1
+    public static DcMotor motorBackLeft = null; // Control Hub: Port 2
+    public static DcMotor motorBackRight = null; // Control Hub: Port 3
+    public static DcMotor motorArm = null; // Extension Hub: Port 0
 
     // Servos
-    public static Servo servoClaw = null;
-    public static Servo servoPlaneLauncher = null;
+    public static Servo servoPlaneLauncher = null; // Control Hub: Port 0
+    public static Servo servoClaw = null; // Control Hub: Port 2
+
 
     // Webcam
     public WebcamName webcam = null;
@@ -47,14 +51,14 @@ public class HardwareControl {
       direction so that the driving works correctly.
     */
     private void driveInit() {
-        motorFront = opMode.hardwareMap.get(DcMotor.class, "motorFront");
-        motorBack = opMode.hardwareMap.get(DcMotor.class, "motorBack");
-        motorLeft = opMode.hardwareMap.get(DcMotor.class, "motorLeft");
-        motorRight = opMode.hardwareMap.get(DcMotor.class, "motorRight");
-        motorFront.setDirection(GVars.FORWARD);
-        motorBack.setDirection(GVars.REVERSE);
-        motorLeft.setDirection(GVars.FORWARD);
-        motorRight.setDirection(GVars.REVERSE);
+        motorFrontLeft = opMode.hardwareMap.get(DcMotor.class, "motorFrontLeft");
+        motorFrontRight = opMode.hardwareMap.get(DcMotor.class, "motorFrontRight");
+        motorBackLeft = opMode.hardwareMap.get(DcMotor.class, "motorBackLeft");
+        motorBackRight = opMode.hardwareMap.get(DcMotor.class, "motorBackRight");
+        motorFrontLeft.setDirection(GVars.FORWARD);
+        motorFrontRight.setDirection(GVars.REVERSE);
+        motorBackLeft.setDirection(GVars.FORWARD);
+        motorBackRight.setDirection(GVars.REVERSE);
     }
 
     private void armInit() {
@@ -152,12 +156,7 @@ public class HardwareControl {
     Time 0.5F second at 1 Power = 1 square on field
 */
 
-//    private final HardwareControl hardware = new HardwareControl(opMode);
-    //private final LinearOpMode opMode = HardwareControl.opMode;
 
-
-//    public static final double autoMaxMovePower = GVars.autoMaxMovePower; // Speed used for moving while running in Autonomous.
-//    public static final double autoMaxTurnPower = GVars.autoMaxTurnPower; // Speed used for turning while running in Autonomous.
 
     /**
      * Make the robot rotate to the left.
@@ -173,10 +172,10 @@ public class HardwareControl {
         opMode.telemetry.update();
 
         while (opMode.opModeIsActive() && (GVars.scriptRunTime.seconds() < time)){
-            motorFront.setPower(-GVars.autoMaxTurnPower);
-            motorBack.setPower(GVars.autoMaxTurnPower);
-            motorLeft.setPower(-GVars.autoMaxTurnPower);
-            motorRight.setPower(GVars.autoMaxTurnPower);
+            motorFrontLeft.setPower(-autoMaxTurnPower);
+            motorFrontRight.setPower(autoMaxTurnPower);
+            motorBackLeft.setPower(-autoMaxTurnPower);
+            motorBackRight.setPower(autoMaxTurnPower);
         }
         motorsStop();
     }
@@ -194,10 +193,10 @@ public class HardwareControl {
         opMode.telemetry.update();
 
         while (opMode.opModeIsActive() && (GVars.scriptRunTime.seconds() < time)) {
-            motorFront.setPower(GVars.autoMaxTurnPower);
-            motorBack.setPower(-GVars.autoMaxTurnPower);
-            motorLeft.setPower(GVars.autoMaxTurnPower);
-            motorRight.setPower(-GVars.autoMaxTurnPower);
+            motorFrontLeft.setPower(autoMaxTurnPower);
+            motorFrontRight.setPower(-autoMaxTurnPower);
+            motorBackLeft.setPower(autoMaxTurnPower);
+            motorBackRight.setPower(-autoMaxTurnPower);
         }
         motorsStop();
     }
@@ -215,8 +214,10 @@ public class HardwareControl {
         opMode.telemetry.update();
 
         while (opMode.opModeIsActive() && (GVars.scriptRunTime.seconds() < time)){
-            motorLeft.setPower(GVars.autoMaxMovePower);
-            motorRight.setPower(GVars.autoMaxMovePower);
+            motorFrontLeft.setPower(autoMaxTurnPower);
+            motorFrontRight.setPower(autoMaxTurnPower);
+            motorBackLeft.setPower(autoMaxTurnPower);
+            motorBackRight.setPower(autoMaxTurnPower);
         }
         motorsStop();
     }
@@ -234,8 +235,10 @@ public class HardwareControl {
         opMode.telemetry.update();
 
         while (opMode.opModeIsActive() && (GVars.scriptRunTime.seconds() < time)){
-            motorLeft.setPower(-GVars.autoMaxMovePower);
-            motorRight.setPower(-GVars.autoMaxMovePower);
+            motorFrontLeft.setPower(-autoMaxTurnPower);
+            motorFrontRight.setPower(-autoMaxTurnPower);
+            motorBackLeft.setPower(-autoMaxTurnPower);
+            motorBackRight.setPower(-autoMaxTurnPower);
         }
         motorsStop();
     }
@@ -245,9 +248,9 @@ public class HardwareControl {
      * Meant for Autonomous scripts but can be used with TeleOp ones.
      */
     public static void motorsStop(){
-        motorFront.setPower(0);
-        motorBack.setPower(0);
-        motorLeft.setPower(0);
-        motorRight.setPower(0);
+        motorFrontLeft.setPower(0);
+        motorFrontRight.setPower(0);
+        motorBackLeft.setPower(0);
+        motorBackRight.setPower(0);
     }
 }

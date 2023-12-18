@@ -35,15 +35,18 @@ public class HardwareControlV2 {
     public static DcMotor motorBackLeft = null; // Control Hub: Port 2
     public static DcMotor motorBackRight = null; // Control Hub: Port 3
     public static DcMotor motorArm = null; // Extension Hub: Port 0
+    public static DcMotor motorArmPivot = null; // Extension Hub: Port 1
 
     // Servos
     public static Servo servoPlaneLauncher = null; // Control Hub: Port 0
+    public static Servo servoClawPivot = null; // Control Hub: Port 1
     public static Servo servoClaw = null; // Control Hub: Port 2
 
 
-    // Webcam
-    public WebcamName webcam = null;
-    public VisionPortal visionPortal = null;
+    // Webcam/AprilTags
+    public static AprilTagProcessor aprilTag = null;
+    public static WebcamName webcam = null;
+    public static VisionPortal visionPortal = null;
 
     /*
       All four motors front, back, left, and right.
@@ -64,6 +67,11 @@ public class HardwareControlV2 {
     private void armInit() {
         motorArm = opMode.hardwareMap.get(DcMotor.class, "motorArm");
         motorArm.setDirection(GVars.FORWARD);
+        motorArmPivot = opMode.hardwareMap.get(DcMotor.class, "motorArmPivot");
+        motorArmPivot.setDirection(GVars.FORWARD);
+        servoClawPivot = opMode.hardwareMap.get(Servo.class, "servoClawPivot");
+        servoClawPivot.scaleRange(0.0, 0.3);
+        servoClawPivot.setPosition(0.0);
         servoClaw = opMode.hardwareMap.get(Servo.class, "servoClaw");
         servoClaw.scaleRange(0.0, 0.3);
         servoClaw.setPosition(0.0);
@@ -147,16 +155,14 @@ public class HardwareControlV2 {
     }
 
 
-/*
-    This script is for giving access to a set of basic
-    robot movement functions that can be used in both
-    Autonomous and TeleOp modes.
+    /*
+        These functions are for giving access to a set of basic
+        robot movement functions that can be used in both
+        Autonomous and TeleOp modes.
 
-    Time 0.175F at 1.0 Power = About 90 degree turn
-    Time 0.5F second at 1 Power = 1 square on field
-*/
-
-
+        Time 0.175F at 1.0 Power = About 90 degree turn
+        Time 0.5F second at 1 Power = 1 square on field
+    */
 
     /**
      * Make the robot rotate to the left.
@@ -214,10 +220,10 @@ public class HardwareControlV2 {
         opMode.telemetry.update();
 
         while (opMode.opModeIsActive() && (GVars.scriptRunTime.seconds() < time)){
-            motorFrontLeft.setPower(autoMaxTurnPower);
-            motorFrontRight.setPower(autoMaxTurnPower);
-            motorBackLeft.setPower(autoMaxTurnPower);
-            motorBackRight.setPower(autoMaxTurnPower);
+            motorFrontLeft.setPower(autoMaxMovePower);
+            motorFrontRight.setPower(autoMaxMovePower);
+            motorBackLeft.setPower(autoMaxMovePower);
+            motorBackRight.setPower(autoMaxMovePower);
         }
         motorsStop();
     }
@@ -235,10 +241,10 @@ public class HardwareControlV2 {
         opMode.telemetry.update();
 
         while (opMode.opModeIsActive() && (GVars.scriptRunTime.seconds() < time)){
-            motorFrontLeft.setPower(-autoMaxTurnPower);
-            motorFrontRight.setPower(-autoMaxTurnPower);
-            motorBackLeft.setPower(-autoMaxTurnPower);
-            motorBackRight.setPower(-autoMaxTurnPower);
+            motorFrontLeft.setPower(-autoMaxMovePower);
+            motorFrontRight.setPower(-autoMaxMovePower);
+            motorBackLeft.setPower(-autoMaxMovePower);
+            motorBackRight.setPower(-autoMaxMovePower);
         }
         motorsStop();
     }

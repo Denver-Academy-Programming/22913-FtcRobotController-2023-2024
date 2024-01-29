@@ -51,15 +51,15 @@ public class HardwareControl {
         motorBack = opMode.hardwareMap.get(DcMotor.class, "motorBack");
         motorLeft = opMode.hardwareMap.get(DcMotor.class, "motorLeft");
         motorRight = opMode.hardwareMap.get(DcMotor.class, "motorRight");
-        motorFront.setDirection(GVars.FORWARD);
-        motorBack.setDirection(GVars.REVERSE);
-        motorLeft.setDirection(GVars.FORWARD);
-        motorRight.setDirection(GVars.REVERSE);
+        motorFront.setDirection(GVars.motorFORWARD);
+        motorBack.setDirection(GVars.motorREVERSE);
+        motorLeft.setDirection(GVars.motorFORWARD);
+        motorRight.setDirection(GVars.motorREVERSE);
     }
 
     private void armInit() {
         motorArm = opMode.hardwareMap.get(DcMotor.class, "motorArm");
-        motorArm.setDirection(GVars.FORWARD);
+        motorArm.setDirection(GVars.motorFORWARD);
         servoClaw = opMode.hardwareMap.get(Servo.class, "servoClaw");
         servoClaw.scaleRange(0.0, 0.3);
         servoClaw.setPosition(0.0);
@@ -67,6 +67,7 @@ public class HardwareControl {
 
     private void launcherInit() {
         servoPlaneLauncher = opMode.hardwareMap.get(Servo.class, "servoPlaneLauncher");
+        servoPlaneLauncher.setDirection(GVars.servoREVERSE);
         servoPlaneLauncher.scaleRange(0.4, 5.0);
         servoPlaneLauncher.setPosition(5.0);
     }

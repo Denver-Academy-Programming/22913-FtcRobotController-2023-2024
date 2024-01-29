@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.library;
 
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /*
@@ -19,14 +20,19 @@ public class GVars {
     public static final ElapsedTime scriptRunTime = new ElapsedTime();
 
     // Powers for turning and moving back and forth.
-    public static float teleopMinTurnPower = -0.5F; // Speed used for turning while running in TeleOp.
-    public static float teleopMinMovePower = -0.5F; // Speed used for moving while running in TeleOp.
-    public static float teleopMaxTurnPower = 0.5F; // Speed used for turning while running in TeleOp.
-    public static float teleopMaxMovePower = 0.5F; // Speed used for moving while running in TeleOp.
+    public static double teleopMaxTurnPower = 0.5; // Speed used for turning while running in TeleOp.
+    public static double teleopMaxMovePower = 0.5; // Speed used for moving while running in TeleOp.
     public static final double autoMaxMovePower = 1.0; // Speed used for moving while running in Autonomous.
     public static final double autoMaxTurnPower = 1.0; // Speed used for turning while running in Autonomous.
 
-    public static final DcMotorSimple.Direction FORWARD = DcMotorSimple.Direction.FORWARD;
-    public static final DcMotorSimple.Direction REVERSE = DcMotorSimple.Direction.REVERSE;
+    public static final int motorArmPivotMinPosition = -185;
+    public static final int motorArmPivotMaxPosition = 1350;
+
+    public static final DcMotorSimple.Direction motorFORWARD = DcMotorSimple.Direction.FORWARD;
+    public static final DcMotorSimple.Direction motorREVERSE = DcMotorSimple.Direction.REVERSE;
+
+    public static final Servo.Direction servoFORWARD = Servo.Direction.FORWARD;
+    public static final Servo.Direction servoREVERSE = Servo.Direction.REVERSE;
+
 
 }

@@ -7,8 +7,15 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.VisionProcessor;
+import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+import org.firstinspires.ftc.vision.tfod.TfodProcessor;
+
+import java.util.concurrent.TimeUnit;
 
 /*
     This library script is used to setup and control certain hardware
@@ -23,7 +30,7 @@ public class HardwareControlV2 {
        with the opMode. This allows accessing LinearOpMode operations
        while in a class that doesn't extend LinearOpMode.
     */
-    public LinearOpMode opMode;
+    public static LinearOpMode opMode;
     public HardwareControlV2(LinearOpMode currentOpMode) {opMode = currentOpMode;}
 
     private static final double autoMaxMovePower = GVars.autoMaxMovePower; // Speed used for moving while running in Autonomous.
@@ -48,30 +55,42 @@ public class HardwareControlV2 {
     public static WebcamName webcam = null;
     public static VisionPortal visionPortal = null;
 
+    public static TfodProcessor tfod = null;
+
     /*
       All four motors front, back, left, and right.
       Grab them all from the hardwareMap and set their
       direction so that the driving works correctly.
     */
     private void driveInit() {
-        motorFrontLeft = opMode.hardwareMap.get(DcMotor.class, "motorFrontLeft");
-        motorFrontRight = opMode.hardwareMap.get(DcMotor.class, "motorFrontRight");
-        motorBackLeft = opMode.hardwareMap.get(DcMotor.class, "motorBackLeft");
-        motorBackRight = opMode.hardwareMap.get(DcMotor.class, "motorBackRight");
-        motorFrontLeft.setDirection(GVars.FORWARD);
-        motorFrontRight.setDirection(GVars.REVERSE);
-        motorBackLeft.setDirection(GVars.FORWARD);
-        motorBackRight.setDirection(GVars.REVERSE);
+        motorFrontLeft = opMode.hardwareMap.get(DcMotor.class, "motorFrontLeft"); // Control Hub Port: 0
+        motorFrontRight = opMode.hardwareMap.get(DcMotor.class, "motorFrontRight");// Control Hub Port: 1
+        motorBackLeft = opMode.hardwareMap.get(DcMotor.class, "motorBackLeft"); // Control Hub Port: 2
+        motorBackRight = opMode.hardwareMap.get(DcMotor.class, "motorBackRight"); // Control Hub Port: 3
+        motorFrontLeft.setDirection(GVars.motorREVERSE);
+        motorFrontRight.setDirection(GVars.motorREVERSE);
+        motorBackLeft.setDirection(GVars.motorFORWARD);
+        motorBackRight.setDirection(GVars.motorREVERSE);
     }
 
     private void armInit() {
-        motorArm = opMode.hardwareMap.get(DcMotor.class, "motorArm");
-        motorArm.setDirection(GVars.FORWARD);
         motorArmPivot = opMode.hardwareMap.get(DcMotor.class, "motorArmPivot");
-        motorArmPivot.setDirection(GVars.FORWARD);
+        motorArmPivot.setDirection(GVars.motorFORWARD);
+        motorArmPivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        motorArmPivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorArmPivot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorArmPivot.setTargetPosition(0);
+
+        motorArm = opMode.hardwareMap.get(DcMotor.class, "motorArm");
+        motorArm.setDirection(GVars.motorFORWARD);
+        motorArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorArm.setTargetPosition(0);
+
         servoClawPivot = opMode.hardwareMap.get(Servo.class, "servoClawPivot");
         servoClawPivot.scaleRange(0.0, 0.3);
         servoClawPivot.setPosition(0.0);
+
         servoClaw = opMode.hardwareMap.get(Servo.class, "servoClaw");
         servoClaw.scaleRange(0.0, 0.3);
         servoClaw.setPosition(0.0);
@@ -79,6 +98,7 @@ public class HardwareControlV2 {
 
     private void launcherInit() {
         servoPlaneLauncher = opMode.hardwareMap.get(Servo.class, "servoPlaneLauncher");
+        servoPlaneLauncher.setDirection(Servo.Direction.REVERSE);
         servoPlaneLauncher.scaleRange(0.4, 5.0);
         servoPlaneLauncher.setPosition(5.0);
     }
@@ -86,10 +106,16 @@ public class HardwareControlV2 {
     private void aprilTagsInit() {
         webcam = opMode.hardwareMap.get(WebcamName.class, "Webcam 1");
 
+        // Create the TensorFlow processor.
+        tfod = TfodProcessor.easyCreateWithDefaults();
+
         // Create the AprilTag processor.
-        AprilTagProcessor aprilTag = new AprilTagProcessor.Builder()
+        aprilTag = new AprilTagProcessor.Builder()
                 .setDrawCubeProjection(true)
+                .setTagLibrary(AprilTagGameDatabase.getCenterStageTagLibrary())
                 .build();
+
+        VisionProcessor[] processors = {tfod, aprilTag};
 
         // Create the vision portal by using a builder.
         VisionPortal.Builder builder = new VisionPortal.Builder();
@@ -98,13 +124,15 @@ public class HardwareControlV2 {
         builder.setCamera(webcam);
         builder.setCameraResolution(new Size(640, 480)); // Set camera resolution.
         builder.enableLiveView(true); // Enable live view.
-        builder.addProcessor(aprilTag); // Set and enable the processor.
+        builder.setAutoStopLiveView(true); // Automatically disable the AprilTag and TensorFlow processors when LiveView is disabled.
+        builder.addProcessors(processors); // Add our TensorFlow and AprilTag processors.
 
         // Build the Vision Portal, using the above settings.
         visionPortal = builder.build();
 
-        // Disable or re-enable the aprilTag processor at any time.
-        visionPortal.setProcessorEnabled(aprilTag, true);
+        // Enable both the TensorFlow and AprilTag processors.
+        visionPortal.setProcessorEnabled(processors[0], true);
+        visionPortal.setProcessorEnabled(processors[1], true);
     }
 
     public void init(boolean drive, boolean arm, boolean launcher, boolean apriltags) {
@@ -258,5 +286,78 @@ public class HardwareControlV2 {
         motorFrontRight.setPower(0);
         motorBackLeft.setPower(0);
         motorBackRight.setPower(0);
+    }
+
+    /**
+     * Apply the power from our joystick inputs
+     * <p>
+     * Positive X is forward
+     * <p>
+     * Positive Y is strafe left
+     * <p>
+     * Positive Yaw is counter-clockwise
+     */
+    public static void moveRobot(double x, double y, double yaw) {
+        // Calculate drive powers
+        double leftFrontPower    =  x -y -yaw;
+        double rightFrontPower   =  x +y +yaw;
+        double leftBackPower     =  x +y -yaw;
+        double rightBackPower    =  x -y +yaw;
+
+        // Normalize drive powers to be less than 1.0
+        double max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
+        max = Math.max(max, Math.abs(leftBackPower));
+        max = Math.max(max, Math.abs(rightBackPower));
+
+        // Make sure the drive powers do not go over the max
+        if (max > 1.0) {
+            leftFrontPower /= max;
+            rightFrontPower /= max;
+            leftBackPower /= max;
+            rightBackPower /= max;
+        }
+
+        // Send powers to the motors
+        motorFrontLeft.setPower(leftFrontPower);
+        motorFrontRight.setPower(rightFrontPower);
+        motorBackLeft.setPower(leftBackPower);
+        motorBackRight.setPower(rightBackPower);
+    }
+    /*
+      Manually set the camera gain and exposure.
+      This can only be called after the webcam initializes.
+    */
+    public static void setManualExposure(int exposureMS, int gain) {
+
+        // We can't adjust the exposure if the camera isn't on, so just return
+        if (visionPortal == null) {
+            return;
+        }
+
+        // Make sure camera is streaming before we try to set the exposure controls
+        if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
+            opMode.telemetry.addData("Camera", "Waiting");
+            opMode.telemetry.update();
+            while (!opMode.isStopRequested() && (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING)) {
+                opMode.sleep(20);
+            }
+            opMode.telemetry.addData("Camera", "Ready");
+            opMode.telemetry.update();
+        }
+
+        // Set camera controls unless we are stopping.
+        if (!opMode.isStopRequested())
+        {
+            ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
+            if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
+                exposureControl.setMode(ExposureControl.Mode.Manual);
+                opMode.sleep(50);
+            }
+            exposureControl.setExposure(exposureMS, TimeUnit.MILLISECONDS);
+            opMode.sleep(20);
+            GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
+            gainControl.setGain(gain);
+            opMode.sleep(20);
+        }
     }
 }

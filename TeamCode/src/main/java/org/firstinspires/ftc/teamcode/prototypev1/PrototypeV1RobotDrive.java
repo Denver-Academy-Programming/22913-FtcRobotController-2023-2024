@@ -30,23 +30,23 @@ public class PrototypeV1RobotDrive extends LinearOpMode {
 
         while (opModeIsActive()) {
             // Controller inputs
-            float leftRightPower = Range.clip(gamepad1.left_stick_x, teleopMinTurnPower, teleopMaxTurnPower);
-            float forwardBackPower = Range.clip(gamepad1.right_stick_y, teleopMinMovePower, teleopMaxMovePower);
+            //double leftRightPower = Range.clip(gamepad1.left_stick_x, teleopMinTurnPower, teleopMaxTurnPower);
+            //double forwardBackPower = Range.clip(gamepad1.right_stick_y, teleopMinMovePower, teleopMaxMovePower);
 
             // Display on the Driver Hub info about our robot while its running
             telemetry.addData("Status", "Script is running!");
             telemetry.addData("Run Time", scriptRunTime);
-            telemetry.addData("leftRightPower", leftRightPower);
-            telemetry.addData("forwardBackPower", forwardBackPower);
+            //telemetry.addData("leftRightPower", leftRightPower);
+            //telemetry.addData("forwardBackPower", forwardBackPower);
             telemetry.addData("Paper Plane Launched?", planeLaunched);
             telemetry.addData("STOP!", "PRESS STOP BUTTON ON DRIVER STATION TO STOP!");
             telemetry.update();
 
             // Set the motors power to what the direction of which stick is being pressed.
-            motorFront.setPower(leftRightPower);
-            motorBack.setPower(leftRightPower);
-            motorLeft.setPower(forwardBackPower);
-            motorRight.setPower(forwardBackPower);
+            //motorFront.setPower(leftRightPower);
+            //motorBack.setPower(leftRightPower);
+            //motorLeft.setPower(forwardBackPower);
+            //motorRight.setPower(forwardBackPower);
 
             // Checking if the bumper buttons are pressed to turn the robot.
             if (gamepad1.left_bumper) {

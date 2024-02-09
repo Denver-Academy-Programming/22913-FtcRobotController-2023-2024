@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.library;
 
+import static java.lang.Thread.sleep;
+
 import android.util.Size;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -28,33 +30,32 @@ public class HardwareControlV2 {
        Get access to the methods in OpMode defining a LinearOpMode
        variable then using a constructor to define the activeOpMode
        with the opMode. This allows accessing LinearOpMode operations
-       while in a class that doesn't extend LinearOpMode.
+       while in a class that doesn't extend LinearOpMode. This won't
+       work for TeleOp scripts that use OpMode instead of LinearOpMode.
     */
     public static LinearOpMode opMode;
     public HardwareControlV2(LinearOpMode currentOpMode) {opMode = currentOpMode;}
 
-    private static final double autoMaxMovePower = GVars.autoMaxMovePower; // Speed used for moving while running in Autonomous.
-    private static final double autoMaxTurnPower = GVars.autoMaxTurnPower; // Speed used for turning while running in Autonomous.
-
+    // Define the variables for all our hardware.
     // Motors
     public static DcMotor motorFrontLeft = null; // Control Hub: Port 0
     public static DcMotor motorFrontRight = null; // Control Hub: Port 1
     public static DcMotor motorBackLeft = null; // Control Hub: Port 2
     public static DcMotor motorBackRight = null; // Control Hub: Port 3
-    public static DcMotor motorArm = null; // Extension Hub: Port 0
-    public static DcMotor motorArmPivot = null; // Extension Hub: Port 1
+    public static DcMotor motorArmPivot = null; // Extension Hub: Port 0
+    public static DcMotor motorArm = null; // Extension Hub: Port 1
 
     // Servos
     public static Servo servoPlaneLauncher = null; // Control Hub: Port 0
-    public static Servo servoClawPivot = null; // Control Hub: Port 1
-    public static Servo servoClaw = null; // Control Hub: Port 2
-
+    public static Servo servoClawPivot1 = null; // Control Hub: Port 1
+    public static Servo servoClawPivot2 = null; // Control Hub: Port 3
+    public static Servo servoClaw1 = null; // Control Hub: Port 4
+    public static Servo servoClaw2 = null; // Control Hub: Port 5
 
     // Webcam/AprilTags
     public static AprilTagProcessor aprilTag = null;
     public static WebcamName webcam = null;
     public static VisionPortal visionPortal = null;
-
     public static TfodProcessor tfod = null;
 
     /*
@@ -63,44 +64,63 @@ public class HardwareControlV2 {
       direction so that the driving works correctly.
     */
     private void driveInit() {
-        motorFrontLeft = opMode.hardwareMap.get(DcMotor.class, "motorFrontLeft"); // Control Hub Port: 0
-        motorFrontRight = opMode.hardwareMap.get(DcMotor.class, "motorFrontRight");// Control Hub Port: 1
-        motorBackLeft = opMode.hardwareMap.get(DcMotor.class, "motorBackLeft"); // Control Hub Port: 2
-        motorBackRight = opMode.hardwareMap.get(DcMotor.class, "motorBackRight"); // Control Hub Port: 3
+        motorFrontLeft = opMode.hardwareMap.get(DcMotor.class, "motorFrontLeft");
+        motorFrontRight = opMode.hardwareMap.get(DcMotor.class, "motorFrontRight");
+        motorBackLeft = opMode.hardwareMap.get(DcMotor.class, "motorBackLeft");
+        motorBackRight = opMode.hardwareMap.get(DcMotor.class, "motorBackRight");
+
+        /*
+           We have a unique hardware setup for our motors.
+           We use bevel gears so we can get away with having two of the motors
+           inside the chassis, the other back two are vertical. This requires us
+           to reverse one of the motor so it cooperates with our setup.
+         */
         motorFrontLeft.setDirection(GVars.motorREVERSE);
         motorFrontRight.setDirection(GVars.motorREVERSE);
         motorBackLeft.setDirection(GVars.motorFORWARD);
         motorBackRight.setDirection(GVars.motorREVERSE);
     }
 
-    private void armInit() {
+    /*
+        Setup the motors and servos for our robot's arm.
+        Set direction, braking behavior, and setup encoders for our purposes.
+    */
+    private void armInit() throws InterruptedException {
+        // Setup the positioning and motor that pivots the entire arm of the claw
         motorArmPivot = opMode.hardwareMap.get(DcMotor.class, "motorArmPivot");
         motorArmPivot.setDirection(GVars.motorFORWARD);
+        motorArmPivot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorArmPivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        motorArmPivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorArmPivot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorArmPivot.setTargetPosition(0);
+        motorArmPivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorArmPivot.setPower(0);
 
+        // Set the positioning and motor that moves the claw up and down
         motorArm = opMode.hardwareMap.get(DcMotor.class, "motorArm");
         motorArm.setDirection(GVars.motorFORWARD);
+        motorArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorArm.setTargetPosition(0);
+        motorArm.setPower(0);
 
-        servoClawPivot = opMode.hardwareMap.get(Servo.class, "servoClawPivot");
-        servoClawPivot.scaleRange(0.0, 0.3);
-        servoClawPivot.setPosition(0.0);
+        //
+        servoClawPivot1 = opMode.hardwareMap.get(Servo.class, "servoClawPivot1");
+        servoClawPivot1.setPosition(0);
+        servoClawPivot2 = opMode.hardwareMap.get(Servo.class, "servoClawPivot2");
+        servoClawPivot2.setPosition(0);
 
-        servoClaw = opMode.hardwareMap.get(Servo.class, "servoClaw");
-        servoClaw.scaleRange(0.0, 0.3);
-        servoClaw.setPosition(0.0);
+        servoClaw1 = opMode.hardwareMap.get(Servo.class, "servoClaw1");
+        //servoClaw1.setDirection(GVars.servoREVERSE);
+        servoClaw1.setPosition(0.05);
+        servoClaw2 = opMode.hardwareMap.get(Servo.class, "servoClaw2");
+        //servoClaw2.setDirection(GVars.servoREVERSE);
+        servoClaw2.setPosition(0);
     }
 
     private void launcherInit() {
         servoPlaneLauncher = opMode.hardwareMap.get(Servo.class, "servoPlaneLauncher");
-        servoPlaneLauncher.setDirection(Servo.Direction.REVERSE);
-        servoPlaneLauncher.scaleRange(0.4, 5.0);
-        servoPlaneLauncher.setPosition(5.0);
+        //servoPlaneLauncher.setDirection(GVars.servoREVERSE);
+        servoPlaneLauncher.setPosition(0.9);
+        //servoPlaneLauncher.scaleRange(0, 0.5);
     }
 
     private void aprilTagsInit() {
@@ -169,10 +189,13 @@ public class HardwareControlV2 {
             opMode.telemetry.addData("Arm", arm);
             opMode.telemetry.addData("Launcher", launcher);
             opMode.telemetry.addData("AprilTags", apriltags);
-            opMode.telemetry.addData("Current OpMode Type", opMode);
+            opMode.telemetry.addData("Current OpMode", opMode);
             opMode.telemetry.addLine();
-           //opMode.telemetry.update();
-        } catch (IllegalArgumentException e) {
+            if (GVars.debug) {
+                opMode.telemetry.update();
+                sleep(3000);
+            }
+        } catch (IllegalArgumentException | InterruptedException e) {
             throw new RuntimeException(
                     "A error occurred in the initialization of the script \n" +
                             "Please check you have the right motor control scheme set on the \n" +
@@ -206,10 +229,10 @@ public class HardwareControlV2 {
         opMode.telemetry.update();
 
         while (opMode.opModeIsActive() && (GVars.scriptRunTime.seconds() < time)){
-            motorFrontLeft.setPower(-autoMaxTurnPower);
-            motorFrontRight.setPower(autoMaxTurnPower);
-            motorBackLeft.setPower(-autoMaxTurnPower);
-            motorBackRight.setPower(autoMaxTurnPower);
+            motorFrontLeft.setPower(-GVars.autoMaxTurnPower);
+            motorFrontRight.setPower(GVars.autoMaxTurnPower);
+            motorBackLeft.setPower(-GVars.autoMaxTurnPower);
+            motorBackRight.setPower(GVars.autoMaxTurnPower);
         }
         motorsStop();
     }
@@ -227,10 +250,10 @@ public class HardwareControlV2 {
         opMode.telemetry.update();
 
         while (opMode.opModeIsActive() && (GVars.scriptRunTime.seconds() < time)) {
-            motorFrontLeft.setPower(autoMaxTurnPower);
-            motorFrontRight.setPower(-autoMaxTurnPower);
-            motorBackLeft.setPower(autoMaxTurnPower);
-            motorBackRight.setPower(-autoMaxTurnPower);
+            motorFrontLeft.setPower(GVars.autoMaxTurnPower);
+            motorFrontRight.setPower(-GVars.autoMaxTurnPower);
+            motorBackLeft.setPower(GVars.autoMaxTurnPower);
+            motorBackRight.setPower(-GVars.autoMaxTurnPower);
         }
         motorsStop();
     }
@@ -248,10 +271,10 @@ public class HardwareControlV2 {
         opMode.telemetry.update();
 
         while (opMode.opModeIsActive() && (GVars.scriptRunTime.seconds() < time)){
-            motorFrontLeft.setPower(autoMaxMovePower);
-            motorFrontRight.setPower(autoMaxMovePower);
-            motorBackLeft.setPower(autoMaxMovePower);
-            motorBackRight.setPower(autoMaxMovePower);
+            motorFrontLeft.setPower(GVars.autoMaxMovePower);
+            motorFrontRight.setPower(GVars.autoMaxMovePower);
+            motorBackLeft.setPower(GVars.autoMaxMovePower);
+            motorBackRight.setPower(GVars.autoMaxMovePower);
         }
         motorsStop();
     }
@@ -269,10 +292,10 @@ public class HardwareControlV2 {
         opMode.telemetry.update();
 
         while (opMode.opModeIsActive() && (GVars.scriptRunTime.seconds() < time)){
-            motorFrontLeft.setPower(-autoMaxMovePower);
-            motorFrontRight.setPower(-autoMaxMovePower);
-            motorBackLeft.setPower(-autoMaxMovePower);
-            motorBackRight.setPower(-autoMaxMovePower);
+            motorFrontLeft.setPower(-GVars.autoMaxMovePower);
+            motorFrontRight.setPower(-GVars.autoMaxMovePower);
+            motorBackLeft.setPower(-GVars.autoMaxMovePower);
+            motorBackRight.setPower(-GVars.autoMaxMovePower);
         }
         motorsStop();
     }
@@ -323,9 +346,12 @@ public class HardwareControlV2 {
         motorBackLeft.setPower(leftBackPower);
         motorBackRight.setPower(rightBackPower);
     }
+
     /*
       Manually set the camera gain and exposure.
       This can only be called after the webcam initializes.
+      Mainly used to adjust exposure to reduce blurry footage
+      when the camera moves with the robot.
     */
     public static void setManualExposure(int exposureMS, int gain) {
 
@@ -338,6 +364,7 @@ public class HardwareControlV2 {
         if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
             opMode.telemetry.addData("Camera", "Waiting");
             opMode.telemetry.update();
+            // Give the camera a little bit to get ready
             while (!opMode.isStopRequested() && (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING)) {
                 opMode.sleep(20);
             }

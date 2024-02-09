@@ -14,25 +14,37 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class GVars {
 
-    // The time the script has been running for. This can't be directly
-    // modified being a "final" variable. Use the built in reset and get
-    // functions in order to work with the variable.
+    // Enable to see debug telemetry messages when running OpModes
+    public static final boolean debug = true;
+
+    /*
+       The time the script has been running for. This can't be directly
+       modified being a "final" variable. Use the built in reset and get
+       functions in order to work with the variable.
+     */
     public static final ElapsedTime scriptRunTime = new ElapsedTime();
 
-    // Powers for turning and moving back and forth.
-    public static double teleopMaxTurnPower = 0.5; // Speed used for turning while running in TeleOp.
-    public static double teleopMaxMovePower = 0.5; // Speed used for moving while running in TeleOp.
+    // Powers for the movement of our robot during both TeleOp and Autonomous modes.
+    public static double teleopMaxTurnScale = 0.75; // Speed used for turning while running in TeleOp.
+    public static double teleopMaxMoveScale = 1.2; // Speed used for moving while running in TeleOp.
+    // Both are made final because we don't plan to adjust speed while in Autonomous mode.
     public static final double autoMaxMovePower = 1.0; // Speed used for moving while running in Autonomous.
     public static final double autoMaxTurnPower = 1.0; // Speed used for turning while running in Autonomous.
+    public static final double armMaxPower = 0.5;
+    public static final double armPivotMaxPower = 0.5;
 
-    public static final int motorArmPivotMinPosition = -185;
-    public static final int motorArmPivotMaxPosition = 1350;
+    /*
+        Min and max positions for our claws functions.
+        These limits will prevent breaking anything.
+    */
+    public static final int motorArmPivotMinPosition = -200 ;
+    public static final int motorArmPivotMaxPosition = 490;
+    public static final int motorArmMinPosition = 0;
+    public static final int motorArmMaxPosition = 0;
 
+    // Makes it easier to define forward and reverse directions for the motors and servos.
     public static final DcMotorSimple.Direction motorFORWARD = DcMotorSimple.Direction.FORWARD;
     public static final DcMotorSimple.Direction motorREVERSE = DcMotorSimple.Direction.REVERSE;
-
     public static final Servo.Direction servoFORWARD = Servo.Direction.FORWARD;
     public static final Servo.Direction servoREVERSE = Servo.Direction.REVERSE;
-
-
 }

@@ -6,7 +6,6 @@ import static org.firstinspires.ftc.teamcode.library.HardwareControl.*;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.library.HardwareControl;
 
@@ -50,16 +49,16 @@ public class PrototypeV1RobotDrive extends LinearOpMode {
 
             // Checking if the bumper buttons are pressed to turn the robot.
             if (gamepad1.left_bumper) {
-                motorFront.setPower(-teleopMaxTurnPower);
-                motorBack.setPower(teleopMaxTurnPower);
-                motorLeft.setPower(-teleopMaxTurnPower);
-                motorRight.setPower(teleopMaxTurnPower);
+                motorFront.setPower(-teleopMaxTurnScale);
+                motorBack.setPower(teleopMaxTurnScale);
+                motorLeft.setPower(-teleopMaxTurnScale);
+                motorRight.setPower(teleopMaxTurnScale);
             }
             if (gamepad1.right_bumper) {
-                motorFront.setPower(teleopMaxTurnPower);
-                motorBack.setPower(-teleopMaxTurnPower);
-                motorLeft.setPower(teleopMaxTurnPower);
-                motorRight.setPower(-teleopMaxTurnPower);
+                motorFront.setPower(teleopMaxTurnScale);
+                motorBack.setPower(-teleopMaxTurnScale);
+                motorLeft.setPower(teleopMaxTurnScale);
+                motorRight.setPower(-teleopMaxTurnScale);
             }
 
             if (gamepad1.x) {

@@ -10,7 +10,6 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.library.GVars;
 import org.firstinspires.ftc.teamcode.library.HardwareControlV2;
-import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 import java.util.List;
@@ -21,6 +20,18 @@ public class PrototypeV2RobotDrive extends LinearOpMode {
     final HardwareControlV2 hardware = new HardwareControlV2(this);
 
     private boolean planeLaunched = false; // Just a indicator that the paper plane launched
+    private boolean clawOpen = false;
+    double frontLeftPower = 0;
+    double frontRightPower = 0;
+    double backLeftPower = 0;
+    double backRightPower = 0;
+    double motorArmPower = 0;
+    double motorArmPivotPower = 0;
+    double motorClawPivotPower = 0;
+    double y = 0;
+    double x = 0;
+    double rx = 0;
+    double speedLevel = 0;
 
     @Override
     public void runOpMode() {
@@ -39,16 +50,24 @@ public class PrototypeV2RobotDrive extends LinearOpMode {
             if (debug) {
                 telemetry.addData("motorArm Position", motorArm.getCurrentPosition());
                 telemetry.addData("motorArmPivot Position", motorArmPivot.getCurrentPosition());
+                //telemetry.addData("motorClawPivot Position", motorClawPivot.getCurrentPosition());
+                telemetry.addData("servoClawPivot1 Position", servoClawPivot1.getPosition());
+                telemetry.addData("servoClawPivot2 Position", servoClawPivot2.getPosition());
+                telemetry.addData("servoClaw1 Position", servoClaw1.getPosition());
+                telemetry.addData("servoClaw2 Position", servoClaw2.getPosition());
                 telemetry.addData("servoPlaneLauncher Position", servoPlaneLauncher.getPosition());
-                telemetry.addData("drive motorFrontLeft", motorFrontLeft.getCurrentPosition());
-                telemetry.addData("drive motorFrontRight", motorFrontRight.getCurrentPosition());
-                telemetry.addData("drive motorBackLeft", motorBackLeft.getCurrentPosition());
-                telemetry.addData("drive motorBackRight", motorBackRight.getCurrentPosition());
-                telemetry.addLine(String.format("gamepad1 Right Joystick X:%d Y:%s", gamepad1.right_stick_x, gamepad1.right_stick_y));
-                telemetry.addLine(String.format("gamepad1 Left Joystick X:%d Y:%s", gamepad1.left_stick_x, gamepad1.left_stick_y));
-                telemetry.addLine(String.format("gamepad2 Right Joystick X:%d Y:%s", gamepad2.right_stick_x, gamepad2.right_stick_y));
-                telemetry.addLine(String.format("gamepad2 Left Joystick X:%d Y:%s", gamepad2.left_stick_x, gamepad2.left_stick_y));
-                //telemetry.addData("Camera State", visionPortal.getCameraState());
+                telemetry.addData("frontLeftPower", frontLeftPower);
+                telemetry.addData("frontRightPower", frontRightPower);
+                telemetry.addData("backLeftPower", backLeftPower);
+                telemetry.addData("backRightPower", backRightPower);
+                telemetry.addData("y", y);
+                telemetry.addData("x", x);
+                telemetry.addData("rx", rx);
+                telemetry.addLine(String.format("gamepad1 Right Joystick X:%f Y:%f", gamepad1.right_stick_x, gamepad1.right_stick_y));
+                telemetry.addLine(String.format("gamepad1 Left Joystick X:%f Y:%f", gamepad1.left_stick_x, gamepad1.left_stick_y));
+                telemetry.addLine(String.format("gamepad2 Right Joystick X:%f Y:%f", gamepad2.right_stick_x, gamepad2.right_stick_y));
+                telemetry.addLine(String.format("gamepad2 Left Joystick X:%f Y:%f", gamepad2.left_stick_x, gamepad2.left_stick_y));
+                //telemetry.addData("AprilTag/TensorFlow/Camera State", visionPortal.getCameraState());
             }
             telemetry.update();
         }
@@ -57,7 +76,7 @@ public class PrototypeV2RobotDrive extends LinearOpMode {
         if (isStopRequested()){return;}
 
         // Reset the currently running timer and start the visionPortal
-        scriptRunTime.reset();
+        GVars.scriptRunTime.reset();
         //visionPortal.resumeLiveView();
 
         while (opModeIsActive()) {
@@ -65,19 +84,10 @@ public class PrototypeV2RobotDrive extends LinearOpMode {
             // Get out AprilTag detections and output information about them
             //telemetryAprilTag();
 
-            // Display on the Driver Hub info about our robot while its running
-            telemetry.addData("Status", "Script is running!");
-            telemetry.addData("Run Time", scriptRunTime);
-            telemetry.addData("Paper Plane Launched?", planeLaunched);
-            //telemetry.addData("AprilTag/TensorFlow State", visionPortal.getCameraState());
-            telemetry.addData("IN CASE OF EMERGENCY", "PRESS STOP BUTTON ON DRIVER STATION TO STOP!");
-
             // Handle button inputs for controllers
             if (gamepad1.x) {
-                servoPlaneLauncher.setDirection(servoREVERSE);
-                servoPlaneLauncher.setPosition(0);
+                servoPlaneLauncher.setPosition(1);
                 planeLaunched = true;
-                servoPlaneLauncher.close();
             } else if (gamepad1.left_bumper) {
                 ; // Add speed changing with bumpers
             }
@@ -93,68 +103,110 @@ public class PrototypeV2RobotDrive extends LinearOpMode {
 //                }
 //            }
 
-            // Keep the motorArm from exceeding its limits that we've set in GVars
-            if (-gamepad2.right_stick_y > 0) {
-                if (motorArmPivot.getCurrentPosition() < GVars.motorArmPivotMaxPosition) {
-                    motorArmPivot.setPower(Range.clip(gamepad2.right_stick_x, -GVars.armPivotMaxPower, GVars.armPivotMaxPower));
-                } else { // Correct movement back to the max position
-                    motorArmPivot.setTargetPosition(motorArmPivotMaxPosition);
-                    motorArmPivot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    while (motorArmPivot.getCurrentPosition() != GVars.motorArmPivotMaxPosition) {
-                        motorArmPivot.setPower(1);
-                    }
-                    motorArmPivot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                    motorArmPivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                }
-            } else if (gamepad2.right_stick_y < 0) {
-                if (motorArmPivot.getCurrentPosition() > GVars.motorArmPivotMinPosition) {
-                    motorArmPivot.setPower(Range.clip(gamepad2.right_stick_x, -GVars.armPivotMaxPower, GVars.armPivotMaxPower));
-                } else { // Correct movement back to the min position if for some reason
-                    motorArmPivot.setTargetPosition(motorArmPivotMinPosition);
-                    motorArmPivot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    while (motorArmPivot.getCurrentPosition() != GVars.motorArmPivotMinPosition) {
-                        motorArmPivot.setPower(1);
-                    }
-                    motorArmPivot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                    motorArmPivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                }
-            } else {
-                motorArmPivot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            // Opening and closing the servoClaws
+            if (gamepad2.x && (servoClaw1.getPosition() == 0.7)) {
+                // Open both claws
+                servoClaw1.setDirection(GVars.servoFORWARD);
+                servoClaw2.setDirection(GVars.servoREVERSE);
+                servoClaw1.setPosition(0);
+                servoClaw2.setPosition(0.7);
+                clawOpen = false;
+            } else if (gamepad2.y && (servoClaw1.getPosition() == 0)) {
+                // Close both claws
+                servoClaw1.setDirection(GVars.servoREVERSE);
+                servoClaw2.setDirection(GVars.servoFORWARD);
+                servoClaw1.setPosition(0.7);
+                servoClaw2.setPosition(0);
+                clawOpen = true;
+            // Opening and closing the servoClawPivot servo
+            } else if (gamepad2.dpad_down && (servoClawPivot1.getPosition() == 0)) {
+                // Open it facing forward
+                servoClawPivot1.setPosition(0.3);
+            } else if (gamepad2.dpad_up && (servoClawPivot1.getPosition() == 0.3)) {
+                // Close it facing it up
+                servoClawPivot1.setPosition(0);
+            } else if (gamepad2.dpad_left && (servoClawPivot2.getPosition() == 0)) {
+                // Open it facing forward
+                servoClawPivot2.setPosition(0.8);
+            } else if (gamepad2.dpad_right && (servoClawPivot2.getPosition() == 0.8)) {
+                // Close it facing it up
+                servoClawPivot2.setPosition(0);
             }
 
-            // Set our variables with our controllers joystick input
-            double y = -gamepad1.left_stick_y;
-            double rx = gamepad1.left_stick_x * GVars.teleopMaxTurnScale;
-            double x = gamepad1.right_stick_x;
+            // Keep the motorArm from exceeding its limits that we've set in GVars
+            motorArmPower = Range.clip(-gamepad2.left_stick_y, -GVars.armMaxPower, GVars.armMaxPower);
+            if (((motorArmPower > 0) && (motorArm.getCurrentPosition() < GVars.motorArmMaxPosition)) ||
+                    ((motorArmPower < 0) && motorArm.getCurrentPosition() > GVars.motorArmMinPosition)) {
+                motorArm.setPower(motorArmPower);
+            } else {
+                motorArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                motorArm.setPower(0);
+            }
 
-            double frontLeftPower = Range.clip(y - x + rx, -1.0, 1.0) / GVars.teleopMaxMoveScale;
-            double frontRightPower = Range.clip(y + x + rx, -1.0, 1.0) / GVars.teleopMaxMoveScale;
-            double backLeftPower = Range.clip(y + x - rx, -1.0, 1.0) / GVars.teleopMaxMoveScale;
-            double backRightPower = Range.clip(y - x - rx, -1.0, 1.0) /  GVars.teleopMaxMoveScale;
+            // Keep the motorArmPivot from exceeding its limits that we've set in GVars
+            motorArmPivotPower = Range.clip(-gamepad2.right_stick_y, -GVars.armPivotMaxPower, GVars.armPivotMaxPower);
+            if (((motorArmPivotPower > 0) && (motorArmPivot.getCurrentPosition() < GVars.motorArmPivotMaxPosition)) ||
+                    ((motorArmPivotPower < 0) && (motorArmPivot.getCurrentPosition() > GVars.motorArmPivotMinPosition))) {
+                motorArmPivot.setPower(motorArmPivotPower);
+            } else {
+                motorArmPivot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                motorArmPivot.setPower(0);
+            }
+
+            // Keep the motorClawPivot from exceeding its limits that we've set in GVars
+//            motorClawPivotPower = Range.clip(-gamepad2.right_stick_y, -GVars.clawPivotMaxPower, GVars.clawPivotMaxPower);
+//            if (((motorClawPivotPower > 0) && (motorClawPivot.getCurrentPosition() < GVars.motorClawPivotMaxPosition)) ||
+//                    ((motorClawPivotPower < 0) && (motorClawPivot.getCurrentPosition() > GVars.motorClawPivotMinPosition))) {
+//                motorClawPivot.setPower(motorClawPivotPower);
+//            } else {
+//                motorClawPivot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//                motorClawPivot.setPower(0);
+//            }
+
+            // Set our variables with our controllers joystick input
+            y = -gamepad1.left_stick_y;
+            rx = gamepad1.right_stick_x * GVars.teleopMaxTurnScale;
+            x = gamepad1.left_stick_x;
+
+            frontLeftPower = Range.clip(y - rx + x, -1.0, 1.0) / GVars.teleopMaxMoveScale;
+            frontRightPower = Range.clip(y + rx + x, -1.0, 1.0) / GVars.teleopMaxMoveScale;
+            backLeftPower = Range.clip(y + rx - x, -1.0, 1.0) / GVars.teleopMaxMoveScale;
+            backRightPower = Range.clip(y - rx - x, -1.0, 1.0) /  GVars.teleopMaxMoveScale;
 
             motorFrontLeft.setPower(frontLeftPower);
             motorFrontRight.setPower(frontRightPower);
             motorBackLeft.setPower(backLeftPower);
             motorBackRight.setPower(backRightPower);
 
+            // Display on the Driver Hub info about our robot while its running
+            telemetry.addData("Status", "Script is running!");
+            telemetry.addLine(String.format("Run Time: %.2f", GVars.scriptRunTime.seconds()));
+            telemetry.addData("Paper Plane Launched?", planeLaunched);
+            telemetry.addData("Claw Open?", clawOpen);
+            //telemetry.addData("AprilTag/TensorFlow/Camera State", visionPortal.getCameraState());
+            telemetry.addData("IN CASE OF EMERGENCY", "PRESS STOP BUTTON ON DRIVER STATION TO STOP!");
+
             if (debug) {
                 telemetry.addData("motorArm Position", motorArm.getCurrentPosition());
                 telemetry.addData("motorArmPivot Position", motorArmPivot.getCurrentPosition());
+                //telemetry.addData("motorClawPivot Position", motorClawPivot.getCurrentPosition());
                 telemetry.addData("servoClawPivot1 Position", servoClawPivot1.getPosition());
                 telemetry.addData("servoClawPivot2 Position", servoClawPivot2.getPosition());
+                telemetry.addData("servoClaw1 Position", servoClaw1.getPosition());
+                telemetry.addData("servoClaw2 Position", servoClaw2.getPosition());
                 telemetry.addData("servoPlaneLauncher Position", servoPlaneLauncher.getPosition());
-                telemetry.addData("drive motorFrontLeft", motorFrontLeft.getPower());
-                telemetry.addData("drive motorFrontRight", motorFrontRight.getPower());
-                telemetry.addData("drive motorBackLeft", motorBackLeft.getPower());
-                telemetry.addData("drive motorBackRight", motorBackRight.getPower());
+                telemetry.addData("frontLeftPower", frontLeftPower);
+                telemetry.addData("frontRightPower", frontRightPower);
+                telemetry.addData("backLeftPower", backLeftPower);
+                telemetry.addData("backRightPower", backRightPower);
                 telemetry.addData("y", y);
                 telemetry.addData("x", x);
                 telemetry.addData("rx", rx);
-                telemetry.addLine(String.format("gamepad1 Right Joystick X:%d Y:%s", gamepad1.right_stick_x, gamepad1.right_stick_y));
-                telemetry.addLine(String.format("gamepad1 Left Joystick X:%d Y:%s", gamepad1.left_stick_x, gamepad1.left_stick_y));
-                telemetry.addLine(String.format("gamepad2 Right Joystick X:%d Y:%s", gamepad2.right_stick_x, gamepad2.right_stick_y));
-                telemetry.addLine(String.format("gamepad2 Left Joystick X:%d Y:%s", gamepad2.left_stick_x, gamepad2.left_stick_y));
-                //telemetry.addData("Camera State", visionPortal.getCameraState());
+                telemetry.addLine(String.format("gamepad1 Right Joystick X:%f Y:%f", gamepad1.right_stick_x, gamepad1.right_stick_y));
+                telemetry.addLine(String.format("gamepad1 Left Joystick X:%f Y:%f", gamepad1.left_stick_x, gamepad1.left_stick_y));
+                telemetry.addLine(String.format("gamepad2 Right Joystick X:%f Y:%f", gamepad2.right_stick_x, gamepad2.right_stick_y));
+                telemetry.addLine(String.format("gamepad2 Left Joystick X:%f Y:%f", gamepad2.left_stick_x, gamepad2.left_stick_y));
+                //telemetry.addData("AprilTag/TensorFlow/Camera State", visionPortal.getCameraState());
             }
 
             // Apply the power from our joystick inputs to the movement function

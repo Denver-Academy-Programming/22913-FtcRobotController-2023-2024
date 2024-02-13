@@ -44,11 +44,12 @@ public class HardwareControlV2 {
     public static DcMotor motorBackRight = null; // Control Hub: Port 3
     public static DcMotor motorArmPivot = null; // Extension Hub: Port 0
     public static DcMotor motorArm = null; // Extension Hub: Port 1
+    //public static DcMotor motorClawPivot = null; // Extension Hub: Port 2
 
     // Servos
     public static Servo servoPlaneLauncher = null; // Control Hub: Port 0
     public static Servo servoClawPivot1 = null; // Control Hub: Port 1
-    public static Servo servoClawPivot2 = null; // Control Hub: Port 3
+    public static Servo servoClawPivot2 = null; // Control Hub: Port 2
     public static Servo servoClaw1 = null; // Control Hub: Port 4
     public static Servo servoClaw2 = null; // Control Hub: Port 5
 
@@ -85,7 +86,7 @@ public class HardwareControlV2 {
         Setup the motors and servos for our robot's arm.
         Set direction, braking behavior, and setup encoders for our purposes.
     */
-    private void armInit() throws InterruptedException {
+    private void armInit() {
         // Setup the positioning and motor that pivots the entire arm of the claw
         motorArmPivot = opMode.hardwareMap.get(DcMotor.class, "motorArmPivot");
         motorArmPivot.setDirection(GVars.motorFORWARD);
@@ -96,30 +97,43 @@ public class HardwareControlV2 {
 
         // Set the positioning and motor that moves the claw up and down
         motorArm = opMode.hardwareMap.get(DcMotor.class, "motorArm");
-        motorArm.setDirection(GVars.motorFORWARD);
+        motorArm.setDirection(GVars.motorREVERSE);
         motorArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorArm.setPower(0);
 
-        //
+        // Set the positioning for the motor controlling the second arm
+//        motorClawPivot = opMode.hardwareMap.get(DcMotor.class, "motorClawPivot");
+//        motorClawPivot.setDirection(GVars.motorFORWARD);
+//        motorClawPivot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        motorClawPivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        motorClawPivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        motorClawPivot.setPower(0);
+
+        // Set the positioning for the servo pivoting the claws
         servoClawPivot1 = opMode.hardwareMap.get(Servo.class, "servoClawPivot1");
+        servoClawPivot1.setDirection(GVars.servoFORWARD);
         servoClawPivot1.setPosition(0);
         servoClawPivot2 = opMode.hardwareMap.get(Servo.class, "servoClawPivot2");
+        servoClawPivot2.setDirection(GVars.servoFORWARD);
         servoClawPivot2.setPosition(0);
 
+        // Set the positioning for the servo claws
         servoClaw1 = opMode.hardwareMap.get(Servo.class, "servoClaw1");
-        //servoClaw1.setDirection(GVars.servoREVERSE);
-        servoClaw1.setPosition(0.05);
+        servoClaw1.setDirection(GVars.servoREVERSE);
+        //servoClaw1.scaleRange(0, 0.5);
+        servoClaw1.setPosition(0.7);
         servoClaw2 = opMode.hardwareMap.get(Servo.class, "servoClaw2");
-        //servoClaw2.setDirection(GVars.servoREVERSE);
+        servoClaw2.setDirection(GVars.servoFORWARD);
+        //servoClaw2.scaleRange(0, 0.5);
         servoClaw2.setPosition(0);
     }
 
     private void launcherInit() {
         servoPlaneLauncher = opMode.hardwareMap.get(Servo.class, "servoPlaneLauncher");
         //servoPlaneLauncher.setDirection(GVars.servoREVERSE);
-        servoPlaneLauncher.setPosition(0.9);
+        servoPlaneLauncher.setPosition(0);
         //servoPlaneLauncher.scaleRange(0, 0.5);
     }
 
@@ -195,7 +209,7 @@ public class HardwareControlV2 {
                 opMode.telemetry.update();
                 sleep(3000);
             }
-        } catch (IllegalArgumentException | InterruptedException e) {
+        } catch (InterruptedException e) {
             throw new RuntimeException(
                     "A error occurred in the initialization of the script \n" +
                             "Please check you have the right motor control scheme set on the \n" +
@@ -320,31 +334,21 @@ public class HardwareControlV2 {
      * <p>
      * Positive Yaw is counter-clockwise
      */
-    public static void moveRobot(double x, double y, double yaw) {
+    public static void moveRobot(double y, double rx, double x) {
         // Calculate drive powers
-        double leftFrontPower    =  x -y -yaw;
-        double rightFrontPower   =  x +y +yaw;
-        double leftBackPower     =  x +y -yaw;
-        double rightBackPower    =  x -y +yaw;
+        double frontLeftMotorPower    =  y - rx + x;
+        double frontRightMotorPower   =  y + rx + x;
+        double backLeftMotorPower     =  y + rx - x;
+        double backRightPower    =  y - rx - x;
 
-        // Normalize drive powers to be less than 1.0
-        double max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
-        max = Math.max(max, Math.abs(leftBackPower));
-        max = Math.max(max, Math.abs(rightBackPower));
+        // Cap our motors
 
-        // Make sure the drive powers do not go over the max
-        if (max > 1.0) {
-            leftFrontPower /= max;
-            rightFrontPower /= max;
-            leftBackPower /= max;
-            rightBackPower /= max;
-        }
 
         // Send powers to the motors
-        motorFrontLeft.setPower(leftFrontPower);
-        motorFrontRight.setPower(rightFrontPower);
-        motorBackLeft.setPower(leftBackPower);
-        motorBackRight.setPower(rightBackPower);
+        motorFrontLeft.setPower(frontLeftMotorPower);
+        motorFrontRight.setPower(frontRightMotorPower);
+        motorBackLeft.setPower(backLeftMotorPower);
+        motorBackRight.setPower(backRightPower);
     }
 
     /*

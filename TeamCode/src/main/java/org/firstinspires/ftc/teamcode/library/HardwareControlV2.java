@@ -7,6 +7,7 @@ import android.util.Size;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
@@ -328,21 +329,18 @@ public class HardwareControlV2 {
     /**
      * Apply the power from our joystick inputs
      * <p>
-     * Positive X is forward
+     * Positive Y is forward
      * <p>
-     * Positive Y is strafe left
+     * Positive X is strafe left
      * <p>
      * Positive Yaw is counter-clockwise
      */
     public static void moveRobot(double y, double rx, double x) {
         // Calculate drive powers
-        double frontLeftMotorPower    =  y - rx + x;
-        double frontRightMotorPower   =  y + rx + x;
-        double backLeftMotorPower     =  y + rx - x;
-        double backRightPower    =  y - rx - x;
-
-        // Cap our motors
-
+        double frontLeftMotorPower    =  Range.clip(y - (rx * GVars.teleopMaxTurnScale) + x, -1.0, 1.0) / GVars.teleopMaxMoveScale;
+        double frontRightMotorPower   =  Range.clip(y + (rx * GVars.teleopMaxTurnScale) + x, -1.0, 1.0) / GVars.teleopMaxMoveScale;
+        double backLeftMotorPower     =  Range.clip(y + (rx * GVars.teleopMaxTurnScale) - x, -1.0, 1.0) / GVars.teleopMaxMoveScale;
+        double backRightPower         =  Range.clip(y - (rx * GVars.teleopMaxTurnScale) - x, -1.0, 1.0) /  GVars.teleopMaxMoveScale;
 
         // Send powers to the motors
         motorFrontLeft.setPower(frontLeftMotorPower);

@@ -10,13 +10,14 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.library.GVars;
 import org.firstinspires.ftc.teamcode.library.HardwareControlV2;
+import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 import java.util.List;
 
 @TeleOp(name = "Prototype V2 Robot Script (THIS ONE DRIVERS!!!)", group = "Prototype V2 Scripts")
 public class PrototypeV2RobotDrive extends LinearOpMode {
-    // Give HardwareControlV2 our current OpMode to setup our hardware when "hardware.init" is called.
+    // Give HardwareControlV2 our current OpMode to setup our hardware when "hardware.init()" is called.
     final HardwareControlV2 hardware = new HardwareControlV2(this);
 
     private boolean planeLaunched = false; // Just a indicator that the paper plane launched
@@ -36,7 +37,7 @@ public class PrototypeV2RobotDrive extends LinearOpMode {
     @Override
     public void runOpMode() {
         // Initialize the hardware for the robot
-        hardware.init(true, true, true, false);
+        hardware.init(true, true, true, true);
 
         /*
             Display the current positions for all motors and servos while in Init.
@@ -50,7 +51,6 @@ public class PrototypeV2RobotDrive extends LinearOpMode {
             if (debug) {
                 telemetry.addData("motorArm Position", motorArm.getCurrentPosition());
                 telemetry.addData("motorArmPivot Position", motorArmPivot.getCurrentPosition());
-                //telemetry.addData("motorClawPivot Position", motorClawPivot.getCurrentPosition());
                 telemetry.addData("servoClawPivot1 Position", servoClawPivot1.getPosition());
                 telemetry.addData("servoClawPivot2 Position", servoClawPivot2.getPosition());
                 telemetry.addData("servoClaw1 Position", servoClaw1.getPosition());
@@ -67,7 +67,7 @@ public class PrototypeV2RobotDrive extends LinearOpMode {
                 telemetry.addLine(String.format("gamepad1 Left Joystick X:%f Y:%f", gamepad1.left_stick_x, gamepad1.left_stick_y));
                 telemetry.addLine(String.format("gamepad2 Right Joystick X:%f Y:%f", gamepad2.right_stick_x, gamepad2.right_stick_y));
                 telemetry.addLine(String.format("gamepad2 Left Joystick X:%f Y:%f", gamepad2.left_stick_x, gamepad2.left_stick_y));
-                //telemetry.addData("AprilTag/TensorFlow/Camera State", visionPortal.getCameraState());
+                telemetry.addData("AprilTag/TensorFlow/Camera State", visionPortal.getCameraState());
             }
             telemetry.update();
         }
@@ -77,12 +77,17 @@ public class PrototypeV2RobotDrive extends LinearOpMode {
 
         // Reset the currently running timer and start the visionPortal
         GVars.scriptRunTime.reset();
-        //visionPortal.resumeLiveView();
+        visionPortal.resumeLiveView();
 
         while (opModeIsActive()) {
 
+            // Set our variables with our controllers joystick input
+            y = -gamepad1.left_stick_y;
+            rx = gamepad1.right_stick_x;
+            x = gamepad1.left_stick_x;
+
             // Get out AprilTag detections and output information about them
-            //telemetryAprilTag();
+            telemetryAprilTag();
 
             // Handle button inputs for controllers
             if (gamepad1.x) {
@@ -93,15 +98,15 @@ public class PrototypeV2RobotDrive extends LinearOpMode {
             }
 
             // Disable our visionPortal manually to not use up our hardware resources
-//            if (gamepad2.x &&
-//                    (visionPortal.getCameraState() == VisionPortal.CameraState.CAMERA_DEVICE_READY) ||
-//                    (visionPortal.getCameraState() == VisionPortal.CameraState.STREAMING)) {
-//                if (visionPortal.getCameraState() == VisionPortal.CameraState.STREAMING) {
-//                    visionPortal.stopLiveView();
-//                } else {
-//                    visionPortal.resumeLiveView();
-//                }
-//            }
+            if (gamepad2.x &&
+                    (visionPortal.getCameraState() == VisionPortal.CameraState.CAMERA_DEVICE_READY) ||
+                    (visionPortal.getCameraState() == VisionPortal.CameraState.STREAMING)) {
+                if (visionPortal.getCameraState() == VisionPortal.CameraState.STREAMING) {
+                    visionPortal.stopLiveView();
+                } else {
+                    visionPortal.resumeLiveView();
+                }
+            }
 
             // Opening and closing the servoClaws
             if (gamepad2.x && (servoClaw1.getPosition() == 0.7)) {
@@ -118,18 +123,18 @@ public class PrototypeV2RobotDrive extends LinearOpMode {
                 servoClaw1.setPosition(0.7);
                 servoClaw2.setPosition(0);
                 clawOpen = true;
-            // Opening and closing the servoClawPivot servo
-            } else if (gamepad2.dpad_down && (servoClawPivot1.getPosition() == 0)) {
-                // Open it facing forward
-                servoClawPivot1.setPosition(0.3);
-            } else if (gamepad2.dpad_up && (servoClawPivot1.getPosition() == 0.3)) {
-                // Close it facing it up
+            // Opening and closing the servoClawPivot servos
+            } else if (gamepad2.dpad_right && (servoClawPivot1.getPosition() == 0)) {
+                // Move the base right
+                servoClawPivot1.setPosition(0.75);
+            } else if (gamepad2.dpad_left && (servoClawPivot1.getPosition() == 0.75)) {
+                // Move the base left
                 servoClawPivot1.setPosition(0);
-            } else if (gamepad2.dpad_left && (servoClawPivot2.getPosition() == 0)) {
-                // Open it facing forward
-                servoClawPivot2.setPosition(0.8);
-            } else if (gamepad2.dpad_right && (servoClawPivot2.getPosition() == 0.8)) {
-                // Close it facing it up
+            } else if (gamepad2.dpad_up && (servoClawPivot2.getPosition() == 0)) {
+                // Rotate it facing forward
+                servoClawPivot2.setPosition(0.65);
+            } else if (gamepad2.dpad_down && (Math.round(servoClawPivot2.getPosition()) == 1)) {
+                // Rotate it facing it back
                 servoClawPivot2.setPosition(0);
             }
 
@@ -153,45 +158,19 @@ public class PrototypeV2RobotDrive extends LinearOpMode {
                 motorArmPivot.setPower(0);
             }
 
-            // Keep the motorClawPivot from exceeding its limits that we've set in GVars
-//            motorClawPivotPower = Range.clip(-gamepad2.right_stick_y, -GVars.clawPivotMaxPower, GVars.clawPivotMaxPower);
-//            if (((motorClawPivotPower > 0) && (motorClawPivot.getCurrentPosition() < GVars.motorClawPivotMaxPosition)) ||
-//                    ((motorClawPivotPower < 0) && (motorClawPivot.getCurrentPosition() > GVars.motorClawPivotMinPosition))) {
-//                motorClawPivot.setPower(motorClawPivotPower);
-//            } else {
-//                motorClawPivot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//                motorClawPivot.setPower(0);
-//            }
-
-            // Set our variables with our controllers joystick input
-            y = -gamepad1.left_stick_y;
-            rx = gamepad1.right_stick_x * GVars.teleopMaxTurnScale;
-            x = gamepad1.left_stick_x;
-
-            frontLeftPower = Range.clip(y - rx + x, -1.0, 1.0) / GVars.teleopMaxMoveScale;
-            frontRightPower = Range.clip(y + rx + x, -1.0, 1.0) / GVars.teleopMaxMoveScale;
-            backLeftPower = Range.clip(y + rx - x, -1.0, 1.0) / GVars.teleopMaxMoveScale;
-            backRightPower = Range.clip(y - rx - x, -1.0, 1.0) /  GVars.teleopMaxMoveScale;
-
-            motorFrontLeft.setPower(frontLeftPower);
-            motorFrontRight.setPower(frontRightPower);
-            motorBackLeft.setPower(backLeftPower);
-            motorBackRight.setPower(backRightPower);
-
             // Display on the Driver Hub info about our robot while its running
             telemetry.addData("Status", "Script is running!");
             telemetry.addLine(String.format("Run Time: %.2f", GVars.scriptRunTime.seconds()));
             telemetry.addData("Paper Plane Launched?", planeLaunched);
             telemetry.addData("Claw Open?", clawOpen);
-            //telemetry.addData("AprilTag/TensorFlow/Camera State", visionPortal.getCameraState());
+            telemetry.addData("AprilTag/TensorFlow/Camera State", visionPortal.getCameraState());
             telemetry.addData("IN CASE OF EMERGENCY", "PRESS STOP BUTTON ON DRIVER STATION TO STOP!");
 
             if (debug) {
                 telemetry.addData("motorArm Position", motorArm.getCurrentPosition());
                 telemetry.addData("motorArmPivot Position", motorArmPivot.getCurrentPosition());
-                //telemetry.addData("motorClawPivot Position", motorClawPivot.getCurrentPosition());
                 telemetry.addData("servoClawPivot1 Position", servoClawPivot1.getPosition());
-                telemetry.addData("servoClawPivot2 Position", servoClawPivot2.getPosition());
+                telemetry.addData("servoClawPivot2 Position", Math.round(servoClawPivot2.getPosition()));
                 telemetry.addData("servoClaw1 Position", servoClaw1.getPosition());
                 telemetry.addData("servoClaw2 Position", servoClaw2.getPosition());
                 telemetry.addData("servoPlaneLauncher Position", servoPlaneLauncher.getPosition());
@@ -206,14 +185,13 @@ public class PrototypeV2RobotDrive extends LinearOpMode {
                 telemetry.addLine(String.format("gamepad1 Left Joystick X:%f Y:%f", gamepad1.left_stick_x, gamepad1.left_stick_y));
                 telemetry.addLine(String.format("gamepad2 Right Joystick X:%f Y:%f", gamepad2.right_stick_x, gamepad2.right_stick_y));
                 telemetry.addLine(String.format("gamepad2 Left Joystick X:%f Y:%f", gamepad2.left_stick_x, gamepad2.left_stick_y));
-                //telemetry.addData("AprilTag/TensorFlow/Camera State", visionPortal.getCameraState());
+                telemetry.addData("AprilTag/TensorFlow/Camera State", visionPortal.getCameraState());
             }
 
-            // Apply the power from our joystick inputs to the movement function
-            //moveRobot(drive, strafe, turn);
-            //setManualExposure(6, 250);  // Use low exposure time to reduce motion blur.
+            moveRobot(y, rx, x); // Apply the power from our joystick inputs to the movement function
+            setManualExposure(6, 250); // Use low exposure time to reduce motion blur.
             telemetry.update();
-            //sleep(20); // Make sure CPU doesn't work too hard.
+            sleep(20); // Make sure CPU doesn't work too hard.
         }
     }
 
